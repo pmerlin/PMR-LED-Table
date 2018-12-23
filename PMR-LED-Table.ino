@@ -86,7 +86,11 @@ unsigned int colorLib[3] = {YELLOW, BLUE, WHITE};
 
 #define  SW_pin  7 // digital pin connected to switch output
 #define L_pin 2
-#define U_pin 3
+#define R_pin 3
+#define U_pin 4
+#define D_pin 5
+#define S_pin 8
+#define E_pin 9
 
 #define X_pin  0 // analog pin connected to X output
 #define Y_pin  1 // analog pin connected to Y output
@@ -109,9 +113,48 @@ Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
 uint8_t curControl = BTN_NONE;
 SoftwareSerial bluetooth(10, 11);
 
+
+const uint64_t CHIFFRE[] = {
+  0x0000000705050507,
+  0x0000000702020302,
+  0x0000000701070407,
+  0x0000000704070407,
+  0x0000000404070505,
+  0x0000000704070107,
+  0x0000000705070107,
+  0x0000000404060407,
+  0x0000000705070507,
+  0x0000000704070507
+};
+
+void printDigit (uint8_t num, uint8_t x, uint8_t y, long col)
+{
+     for (int i=0; i <5 ; i++)
+     {
+        byte row= (CHIFFRE[num] >>i *8) & 0xFF;
+        for (int j = 0; j<3; j++)
+        {
+          if (bitRead(row,j))
+            setTablePixel (j+x, i+y, col);
+          else
+            setTablePixel (j+x, i+y, BLACK);
+        }
+     }
+}
+
+void printNumber (uint8_t num, uint8_t x, uint8_t y, long col)
+{
+  uint8_t d=num/10;
+  uint8_t u=num%10;
+
+  if (d) printDigit (d,x,y, col);
+  printDigit (u,x+4,y, col);
+}
+
+
 void readInput(){
   curControl = BTN_NONE;
-  
+/*  
   char keypressed = myKeypad.getKey();
   if (keypressed != NO_KEY)
   {
@@ -128,15 +171,23 @@ void readInput(){
     else if ( keypressed == 'L')
       curControl = BTN_LEFT;                  
   }
-  if (digitalRead(SW_pin) ==0)
+*/
+  if (!digitalRead(SW_pin) || !digitalRead(S_pin) )
     curControl += BTN_START;
-  if (digitalRead(L_pin) ==0)
+  if (!digitalRead(L_pin))
     curControl += BTN_LEFT;
-  if (digitalRead(U_pin) ==0)
+  if (!digitalRead(U_pin))
     curControl += BTN_UP;
+  if (!digitalRead(R_pin))
+    curControl += BTN_RIGHT;
+  if (!digitalRead(D_pin))
+    curControl += BTN_DOWN;
+  if (!digitalRead(E_pin))
+    curControl += BTN_EXIT;
 
   
 //    curControl = BTN_EXIT;
+/*
   if(analogRead(X_pin)-X_init < -30)
     curControl += BTN_UP;
   else if(analogRead(X_pin)-X_init > 30)
@@ -145,10 +196,11 @@ void readInput(){
     curControl += BTN_RIGHT;
   else if(analogRead(Y_pin)-Y_init > 30)
     curControl =+ BTN_LEFT;
+    */
 //  else  curControl = BTN_NONE;  
 
   Serial.print(curControl);
-//   delay(150);
+   delay(40);
 /*  
   if (bluetooth.available() > 0) {
     // read the incoming byte:
@@ -607,7 +659,11 @@ void setup(){
   Y_init = analogRead(Y_pin);  
   pinMode(SW_pin,INPUT_PULLUP);
   pinMode(L_pin,INPUT_PULLUP);
+  pinMode(R_pin,INPUT_PULLUP);
   pinMode(U_pin,INPUT_PULLUP);
+  pinMode(D_pin,INPUT_PULLUP);
+  pinMode(S_pin,INPUT_PULLUP);
+  pinMode(E_pin,INPUT_PULLUP);
 
   
   //Wait for serial port to connect

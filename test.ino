@@ -48,23 +48,11 @@ const uint64_t IMAGES5[] = {
   0x0705070000e0a0e0
 };
 
-const uint64_t CHIFFRE[] = {
-  0x0000000705050507,
-  0x0000000702020302,
-  0x0000000701070407,
-  0x0000000704070407,
-  0x0000000404070505,
-  0x0000000704070107,
-  0x0000000705070107,
-  0x0000000404060407,
-  0x0000000705070507,
-  0x0000000704070507
-};
-
 const byte bytex[]={3,4,5, 6,7,8, 8,8,8, 8,7,6, 5,4,3, 2,1,0, 0,0,0, 0,1,2 }; //24
 //const byte bytey[]={0,0,0, 0,1,2, 3,4,5, 6,7,8, 8,8,8, 8,7,6, 5,4,3, 2,1,0  };
 
-void countDown(byte nb)
+
+void countDown(uint8_t nb)
 {
   for (int r=nb; r >=0 ; r--)
   {
@@ -141,6 +129,11 @@ void DelayAndTestExit(int time){
 void initApp(){
   AppRunning = true;
   countDown(3);
+
+  printNumber (15, 0, 0, RED);
+  printNumber (99, 8,0, YELLOW);
+  showPixels();
+  delay (5000);
 }
 
 void runTest(){

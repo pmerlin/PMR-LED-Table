@@ -19,6 +19,7 @@ void mainLoop(void){
   int curSelectionTextLength;
   unsigned long prevUpdateTime = 0;
 
+//runTest();
 runSnake();
   
   while(true){

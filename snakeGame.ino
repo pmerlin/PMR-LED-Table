@@ -5,6 +5,9 @@
  * Snake game
  */
 
+#define SPEED 600
+#define BUTTIME 601
+
 void snakeInit(){
   //Snake start position and direction & initialise variables
   curLength[0] = 3;
@@ -36,19 +39,24 @@ void runSnake(){
   snakeInit();
   unsigned long prevUpdateTime = 0;
   boolean snakeRunning = true;
-  uint8_t j;
+  uint8_t i,j;
 
   long snakecol[]= { WHITE, BLUE, GREEN };
   
   while(snakeRunning){    
     //Check self-collision with snake
-    int i=curLength[0]-1;
-    while (i>=2){
-      if (collide(xs[0][0], xs[0][i], ys[0][0], ys[0][i], SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH)){
-        Serial.println("Selfcollision");
-        die();
+    
+
+    for (j=0; j<NBPLAYER; j++)
+    {    
+      int i=curLength[j]-1;
+      while (i>=2){
+        if (collide(xs[j][0], xs[j][i], ys[j][0], ys[j][i], SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH)){
+          Serial.println("Selfcollision");
+          die();
+        }
+        i = i-1;
       }
-      i = i-1;
     }
     
     if (snakeGameOver){
@@ -140,33 +148,57 @@ void runSnake(){
     showPixels();
 
     //Check buttons and set snake movement direction while we are waiting to draw the next move
-    unsigned long curTime;
-    boolean dirChanged = false;
-
+    unsigned long curTime = millis(), now;
+//    uint8_t  dirChanged = 0;
+    static long  dirChanged= 0;//= false;
+    static long  dirChanged2=0;// = false;
+    
     do{
       readInput();
       if (curControl == BTN_EXIT){
         snakeRunning = false;
         break;
+      } 
+      now=millis();
+      if ( (curControl != BTN_NONE && now-dirChanged>BUTTIME) && ( !(curControl&BTN_LEFT) || !(curControl&BTN_RIGHT) ) ){//Can only change direction once per loop
+          dirChanged=millis(); 
+          setDirectionJ1();
       }
+        
+      if ( (curControl != BTN_NONE && now-dirChanged2>BUTTIME) && ( !(curControl&BTN_UP) || !(curControl&BTN_DOWN) ) ){//Can only change direction once per loop
+          dirChanged2 =millis();
+          setDirectionJ2();
+      }
+    
+ /*     
       if (curControl != BTN_NONE && !dirChanged){//Can only change direction once per loop
         dirChanged = true;
         setDirection();
-      }
-      curTime = millis();
+      }      */
+
     } 
-    while ((curTime - prevUpdateTime) <600);//Once enough time  has passed, proceed. The lower this number, the faster the game is // 
-    prevUpdateTime = curTime;
+    while ( (millis() - curTime ) <SPEED);//Once enough time  has passed, proceed. The lower this number, the faster the game is // 
+
+ //   prevUpdateTime = curTime;
   }
   
   fadeOut();
+
+  printNumber (score[0], 0, 0, RED);
+  printNumber (score[1], 8,0, YELLOW);
+  
+  showPixels();
+  delay (5000);
+  fadeOut();   
+/*
   char buf[4];
   int len = sprintf(buf, "%i", score[0]);
   scrollTextBlocked(buf,len,WHITE);
+  */
 }
 
 /* Set direction from current button state */
-void setDirection(){
+void setDirectionJ1(){
 
   if (curControl & BTN_LEFT)
   {
@@ -178,6 +210,9 @@ void setDirection(){
       dir[0]++;
       if (dir[0]==5) dir[0]=1;
   }
+}
+
+void setDirectionJ2(){
   if (curControl & BTN_DOWN) 
   {
       dir[1]--;
