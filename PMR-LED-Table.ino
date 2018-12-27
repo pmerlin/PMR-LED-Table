@@ -206,7 +206,7 @@ void readInput(){
 //  else  curControl = BTN_NONE;  
 
   Serial.print(curControl);
-//   delay(40);
+  delay(20);
 /*  
   if (bluetooth.available() > 0) {
     // read the incoming byte:

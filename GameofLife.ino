@@ -5,7 +5,7 @@
 
 */
 
-#define  gameoflifedelay 300
+#define  gameoflifedelay 700 //300
 boolean GameofLiferunning = false;
 long density = 50;
 int generation = 0;
