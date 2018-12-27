@@ -21,7 +21,8 @@ void mainLoop(void){
 
 //runTest();
 //runSnake();
-runDP();
+//runDP();
+runColorPalette();
 
   
   while(true){

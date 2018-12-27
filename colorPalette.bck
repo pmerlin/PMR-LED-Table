@@ -5,9 +5,7 @@
  * Basic animation with fading stars
  */
 
-//#define UPDATES_PER_SECOND 100
-//#define UPDATES_PER_SECOND 50
-#define UPDATES_PER_SECOND 12
+#define UPDATES_PER_SECOND 100
 CRGBPalette16 currentPalette;
 TBlendType    currentBlending;
 
@@ -91,31 +89,10 @@ void FillLEDsFromPaletteColors( uint8_t colorIndex)
     }
 }
 
-void changePalette()
-{
-    static uint8_t pal = 1;
-
-    switch (pal)
-    {
-      case 0: currentPalette = RainbowColors_p; currentBlending = LINEARBLEND; break;
-      case 1: currentPalette = RainbowStripeColors_p;   currentBlending = NOBLEND;
-      case 2: currentPalette = RainbowStripeColors_p;   currentBlending = LINEARBLEND; break;
-      case 3: SetupPurpleAndGreenPalette();             currentBlending = LINEARBLEND; break;
-      case 4: SetupTotallyRandomPalette();              currentBlending = LINEARBLEND ; break;
-      case 5: SetupBlackAndWhiteStripedPalette();       currentBlending = NOBLEND; break;
-      case 6: SetupBlackAndWhiteStripedPalette();       currentBlending = LINEARBLEND; break;
-      case 7: currentPalette = CloudColors_p;           currentBlending = LINEARBLEND;; break;
-      case 8: currentPalette = PartyColors_p;           currentBlending = LINEARBLEND;; break;
-      case 9: currentPalette = myRedWhiteBluePalette_p; currentBlending = NOBLEND; break;
-      case 10: currentPalette = myRedWhiteBluePalette_p; currentBlending = LINEARBLEND; ; break;       
-    }
-    if (++pal>10) pal=0;
-}
-
 void runColorPalette(){
   static uint8_t startIndex = 0;
-  unsigned long click = 0;
-  unsigned long curTime;
+  unsigned long prevUpdateTime = 0;
+  unsigned long curTime = 0;
   colorPaletteRunning = true;
   currentPalette = RainbowColors_p;
   currentBlending = LINEARBLEND;
@@ -126,49 +103,39 @@ void runColorPalette(){
   while(colorPaletteRunning){
     uint8_t secondHand = (millis() / 1000) % 60;
     static uint8_t lastSecond = 99;
- /*   
+    
     if( lastSecond != secondHand) {
         lastSecond = secondHand;
         if( secondHand == 15)  { currentPalette = RainbowStripeColors_p;   currentBlending = NOBLEND;  }
         if( secondHand == 30)  { SetupBlackAndWhiteStripedPalette();       currentBlending = NOBLEND; }
         if( secondHand == 45)  { currentPalette = PartyColors_p;           currentBlending = LINEARBLEND; }
     }
-*/
+
     
     FillLEDsFromPaletteColors( startIndex);
     showPixels();
     setDelay(1000/UPDATES_PER_SECOND);
     startIndex = startIndex + 1;
     //Check input keys
-
-    curTime=millis();
     do{
-//      setDelay(1000/UPDATES_PER_SECOND);
       readInput();
       if (curControl == BTN_EXIT){
         colorPaletteRunning = false;
         break;
       }
-      else if (curControl != BTN_NONE && millis()-click > 600)
-      {
-        changePalette();
-        click=millis();
-  //      clearTablePixels();
-      }
-      
+      curTime = millis();
+      delay(10);
     } 
-    while ((millis()- curTime) <20);//Once enough time  has passed, proceed. The lower this number, the faster the game is //20
-
-//    while ((curTime - prevUpdateTime) <20);//Once enough time  has passed, proceed. The lower this number, the faster the game is
-//    prevUpdateTime = curTime;
+    while ((curTime - prevUpdateTime) <20);//Once enough time  has passed, proceed. The lower this number, the faster the game is
+    prevUpdateTime = curTime;
   }
   displayLogo();
 }
 
 void runRainbowPalette(){
   static uint8_t startIndex = 0;
-  unsigned long click = 0;
-  unsigned long curTime;
+  unsigned long prevUpdateTime = 0;
+  unsigned long curTime = 0;
   colorPaletteRunning = true;
   currentPalette = RainbowColors_p;
   currentBlending = LINEARBLEND;
@@ -185,28 +152,17 @@ void runRainbowPalette(){
     showPixels();
     setDelay(1000/UPDATES_PER_SECOND);
     startIndex = startIndex + 1;
-    
     //Check input keys
-    curTime=millis();
     do{
       readInput();
       if (curControl == BTN_EXIT){
         colorPaletteRunning = false;
         break;
       }
-/*             
-      else if (curControl != BTN_NONE && millis()-click > 600)
-      {
-        changePalette();
-        click=millis();
-  //      clearTablePixels();
-      }
-*/
+      curTime = millis();
+      delay(10);
     } 
-    while ((millis()- curTime) < 20);//Once enough time  has passed, proceed. The lower this number, the faster the game is //20
-
-//    while ((curTime - prevUpdateTime) <20);//Once enough time  has passed, proceed. The lower this number, the faster the game is
-//    prevUpdateTime = curTime;
+    while ((curTime - prevUpdateTime) <20);//Once enough time  has passed, proceed. The lower this number, the faster the game is
+    prevUpdateTime = curTime;
   }
-  displayLogo();
 }

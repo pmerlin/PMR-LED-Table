@@ -10,6 +10,7 @@
 //#include <Keypad.h>
 #define BRIGHTNESS 40
 #define TEXTSPEED  140
+//#define DEBUG
 //#define COLOR_ORDER GRB
 //#define FAST_LED_CHIPSET WS2811
 #define FAST_LED_CHIPSET NEOPIXEL
@@ -129,7 +130,7 @@ const uint64_t CHIFFRE[] = {
   0x0000000704070507
 };
 
-void printDigit (uint8_t num, uint8_t x, uint8_t y, long col)
+void printDigit (uint8_t num, uint8_t x, uint8_t y, unsigned long col)
 {
      for (int i=0; i <5 ; i++)
      {
@@ -144,7 +145,7 @@ void printDigit (uint8_t num, uint8_t x, uint8_t y, long col)
      }
 }
 
-void printNumber (uint8_t num, uint8_t x, uint8_t y, long col)
+void printNumber (uint8_t num, uint8_t x, uint8_t y, unsigned long col)
 {
   uint8_t d=num/10;
   uint8_t u=num%10;
@@ -292,9 +293,31 @@ setTablePixel(3,1,YELLOW);
 setTablePixel(4,1,LBLUE);
 setTablePixel(5,1,PURPLE);
 setTablePixel(6,1,WHITE);
-
+setTablePixel(0,2,0xFF0000 );
+setTablePixel(1,2,0x00FF00 );
+setTablePixel(2,2,0x0000FF );
+setTablePixel(0,3,CRGB(0xFF0000) );
+setTablePixel(1,3,CRGB(0x00FF00) );
+setTablePixel(2,3,CRGB(0x0000FF) );
    FastLED.show();
-   delay(2000);
+   delay(1000);
+for (int i =0xFF; i; i--)
+{
+  setTablePixel(0,2,i<<16 );
+  setTablePixel(1,2,i<<8 );
+  setTablePixel(2,2,i );
+  unsigned long tmp=i<<16+i<<8+i;
+  setTablePixel(3,2,tmp );  
+  
+  setTablePixelRGB(0,3,i,0,0 );
+  setTablePixelRGB(1,3,0,i,0 );
+  setTablePixelRGB(2,3,0,0,i );
+  setTablePixelRGB(3,3,i,i,i );
+  FastLED.show();
+  delay(20);
+}
+
+
 #endif
 /*
   for (int y = 0; y < SHORT_SIDE ; y++)
@@ -315,7 +338,7 @@ setTablePixel(6,1,WHITE);
 }
 
 
-void setPixel(int n, long color){
+void setPixel(int n, unsigned long color){
   leds[n] = CRGB(color);
 }
 
@@ -327,9 +350,10 @@ void setDelay(int duration) {
   FastLED.delay(duration);
 }
 
-long getPixel(int n){
+unsigned long getPixel(int n){
   return (leds[n].r << 16) + (leds[n].g << 8) + leds[n].b;  
 }
+
 
 void showPixels(){
   FastLED.show();
@@ -355,14 +379,14 @@ void setTablePixelrgbv(int x, int y, CRGB col){
    leds [ (LONG_SIDE-1-y)+ x*LONG_SIDE ] = col ;
 }
 
-void setTablePixelDouble(int x, int y, long col){
+void setTablePixelDouble(int x, int y, unsigned long col){
    setTablePixel( (x<<1), (y<<1), col);
    setTablePixel( (x<<1)+1, (y<<1), col);
    setTablePixel( (x<<1), (y<<1)+1, col);
    setTablePixel( (x<<1)+1, (y<<1)+1, col);
 }
 
-void setTablePixel(int x, int y, long color){
+void setTablePixel(int x, int y, unsigned long color){
  // #ifdef ORIENTATION_HORIZONTAL
 //  setPixel(y%2 ? y*FIELD_WIDTH + x : y*FIELD_WIDTH + ((FIELD_HEIGHT-1)-x),color);
    
@@ -631,8 +655,13 @@ void fadeOut(){
 
 void dimLeds(float factor){
   //Reduce brightness of all LEDs, typical factor is 0.97
-  for (int n=0; n<(FIELD_WIDTH*FIELD_HEIGHT); n++){
-    long curColor = getPixel(n);
+  for (int n=0; n<(FIELD_WIDTH*FIELD_HEIGHT); n++)
+  {
+    leds[n].r*=factor;
+    leds[n].g*=factor;
+    leds[n].b*=factor;
+/*
+    unsigned long curColor = getPixel(n);
     //Derive the tree colors
     int r = ((curColor & 0xFF0000)>>16);
     int g = ((curColor & 0x00FF00)>>8);
@@ -645,6 +674,7 @@ void dimLeds(float factor){
     curColor = (r<<16) + (g<<8) + b;
     //Set led again
     setPixel(n,curColor);
+*/
   }
 }
 
