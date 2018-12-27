@@ -6,10 +6,11 @@
  * Main code for Dice game
  */
  
-#include "diceCommon.h"
-#define MATH_ANIMATION 20
-boolean diceRunning;
+//#include "diceCommon.h"
+//#define MATH_ANIMATION 20
+boolean dpRunning;
 boolean diceMath;
+uint8_t printmode=0;
 
 // https://xantorohara.github.io/led-matrix-editor/
 
@@ -49,17 +50,16 @@ const uint64_t DAFTPUNK[] = {
 const int DAFTPUNK_LEN = sizeof(DAFTPUNK)/8;
 
                
-void initDice() {
-  diceRunning = true;
+void initDP() {
+  dpRunning = true;
  // diceMath = false;
 //  randomSeed(analogRead(0));
-  // Clear pixels
-  for (int i = 0; i < FIELD_WIDTH * FIELD_HEIGHT; i++)
-    setPixel(i, 0);
+  clearTablePixels();
   showPixels();
 }
 
-void displayImageDP(uint64_t image) {
+void displayImageDP(uint64_t image) 
+{
   for (int y = 0; y < 5; y++) 
   {
     byte row = (image >> y * 8) & 0xFF;
@@ -67,58 +67,74 @@ void displayImageDP(uint64_t image) {
     {
 	    if( bitRead(row, x) )
       {
+        if (!printmode)
+        {
           setTablePixelDouble (x+1, y, RED );
-/*
+        }
+        else 
+        {
           setTablePixel (x, y, RED);
           setTablePixel (x+5, y, YELLOW);
           setTablePixel (x+10, y, RED);
           setTablePixel (x, y+5, YELLOW);
           setTablePixel (x+5, y+5, RED);
           setTablePixel (x+10, y+5, YELLOW);
-          */
+        }
       }
       else
       {
+        if (!printmode)
+        {
           setTablePixelDouble (x+1, y, BLACK);
- /*         
-         setTablePixel (x, y, BLACK);
+        }
+        else 
+        {  
+          setTablePixel (x, y, BLACK);
           setTablePixel (x+5, y, BLACK);
           setTablePixel (x+10, y, BLACK);
           setTablePixel (x, y+5, BLACK);
           setTablePixel (x+5, y+5, BLACK);
           setTablePixel (x+10, y+5, BLACK);
- */
+        }
       }
     }
   }
   showPixels();
-  delay (500);
+//  delay (500);
 }
 
-void runDice() {
-  initDice();
+void runDP() {
+  initDP();
   unsigned long prevUpdateTime = 0;
-  unsigned long curTime = 0;
+  unsigned long curTime, click=0;
   uint8_t i = 1;
-  
-  while(diceRunning) 
+
+  while(dpRunning) 
   {
     displayImageDP(DAFTPUNK[i]);
     if (++i >= DAFTPUNK_LEN ) i = 0;
    
+    curTime=millis();
     do
     {
       readInput();
       if (curControl == BTN_EXIT){
-        diceRunning = false;
+        dpRunning = false;
         break;
       }
-      curTime = millis();
-      delay(550);
+      else if (curControl != BTN_NONE && millis()-click > 600)
+      {
+        printmode=1-printmode;
+        click=millis();
+        clearTablePixels();
+      }
+      
+//      delay(550);
     }
-    while ((curTime - prevUpdateTime) <20);//Once enough time  has passed, proceed. The lower this number, the faster the game is
-    prevUpdateTime = curTime;
-   }
+    while ((millis()- curTime) <1000);//Once enough time  has passed, proceed. The lower this number, the faster the game is //20
+//    prevUpdateTime = curTime;
+  }
+  displayLogo();
 }
 /*
 void printDice(const boolean dice[][10]){

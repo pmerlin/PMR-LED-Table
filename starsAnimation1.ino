@@ -60,4 +60,5 @@ void runStars(){
     while ((curTime - prevUpdateTime) <80);//Once enough time  has passed, proceed. The lower this number, the faster the game is
     prevUpdateTime = curTime;
   }
+  displayLogo();
 }

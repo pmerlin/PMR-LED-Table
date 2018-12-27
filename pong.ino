@@ -82,6 +82,7 @@ void runPong(){
   }
   
   fadeOut();
+  displayLogo();
 }
 
 void setPosition(){

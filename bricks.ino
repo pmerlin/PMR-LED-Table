@@ -78,6 +78,7 @@ void runBricks(){
   char buf[4];
   int len = sprintf(buf, "%i", scorePlayer);
   scrollTextBlockedv(buf,len,WHITE);
+  displayLogo();
 }
 
 void setPositionPaddle(){

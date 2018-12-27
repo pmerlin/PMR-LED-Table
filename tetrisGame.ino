@@ -32,6 +32,7 @@ void runTetris(void){
     unsigned long curTime;
     do{
       readInput();
+      if (curControl && BTN_UP) delay (400);
       if (curControl != BTN_NONE){
         playerControlActiveBrick();
         printField();
@@ -68,6 +69,7 @@ void runTetris(void){
   }
   
   fadeOut();
+  displayLogo();
 }
 
 void playerControlActiveBrick(){

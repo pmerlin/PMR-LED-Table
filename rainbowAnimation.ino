@@ -28,6 +28,7 @@ void runRainbow(){
   }
   
   fadeOut();
+  displayLogo();
 }
 
 // phaseShift is the shift between each row.  phaseShift=0
@@ -97,7 +98,3 @@ unsigned int h2rgb(unsigned int v1, unsigned int v2, unsigned int hue){
   if (hue < 240) return v1 * 60 + (v2 - v1) * (240 - hue);
   return v1 * 60;
 }
-
-
-
-

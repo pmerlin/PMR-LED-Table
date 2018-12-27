@@ -7,7 +7,7 @@
  * or setting pixels on the LED area
  */
 #include <SoftwareSerial.h>
-#include <Keypad.h>
+//#include <Keypad.h>
 #define BRIGHTNESS 40
 #define TEXTSPEED  140
 //#define COLOR_ORDER GRB
@@ -86,12 +86,13 @@ unsigned int colorLib[3] = {YELLOW, BLUE, WHITE};
 
 #define  SW_pin  7 // digital pin connected to switch output
 #define L_pin 2
-#define R_pin 3
-#define U_pin 4
-#define D_pin 5
+#define R_pin 5
+#define U_pin 3
+#define D_pin 4
 #define S_pin 8
 #define E_pin 9
 
+/*
 #define X_pin  0 // analog pin connected to X output
 #define Y_pin  1 // analog pin connected to Y output
 int X_init, Y_init;
@@ -109,6 +110,7 @@ char keymap[numRows][numCols]=
 byte rowPins[numRows] = {45,43,41,39}; //Rows 0 to 3
 byte colPins[numCols]= {37,35,33,31}; //Columns 0 to 3
 Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
+*/
 
 uint8_t curControl = BTN_NONE;
 SoftwareSerial bluetooth(10, 11);
@@ -147,8 +149,11 @@ void printNumber (uint8_t num, uint8_t x, uint8_t y, long col)
   uint8_t d=num/10;
   uint8_t u=num%10;
 
-  if (d) printDigit (d,x,y, col);
-  printDigit (u,x+4,y, col);
+  if (d){
+    printDigit (d,x,y, col);
+    printDigit (u,x+4,y, col);
+  }
+  else printDigit (u,x+2,y, col);
 }
 
 
@@ -200,7 +205,7 @@ void readInput(){
 //  else  curControl = BTN_NONE;  
 
   Serial.print(curControl);
-   delay(40);
+//   delay(40);
 /*  
   if (bluetooth.available() > 0) {
     // read the incoming byte:
@@ -231,7 +236,41 @@ void readInput(){
 }
 
 
+void displayLogo(){
+  const CRGB ipalette5[] = {
+{ 0, 0, 0}, 
+{255, 0, 0},
+{0, 255, 0},
+{30, 30, 255},
+{100, 220, 220},
+{160, 190, 200},
+{ 100, 220, 250},
+{110, 80, 210},
+{ 210, 190, 200}
+ };
 
+  const uint8_t invader5[10][15] = {
+  {1,1,1,0,2,2,2,3,0,0,0,3,4,0,0},
+  {1,0,0,1,0,2,0,0,3,0,3,0,4,0,0},
+  {1,0,0,1,0,2,0,0,0,3,0,0,4,0,0},
+  {1,1,1,0,0,2,0,0,3,0,3,0,4,0,0},
+  {1,0,0,0,2,2,2,3,0,0,0,3,4,4,4},
+  {5,5,5,0,6,6,0,7,7,7,0,8,0,0,0},
+  {0,5,0,6,0,0,6,7,0,0,7,8,0,0,0},
+  {0,5,0,6,0,0,6,7,7,7,0,8,0,0,0},
+  {0,5,0,6,6,6,6,7,0,0,7,8,0,0,0},
+  {0,5,0,6,0,0,6,7,7,7,0,8,8,8,0}
+};
+
+  for (uint8_t y = 0; y < SHORT_SIDE; ++y) {
+    for (uint8_t x = 0; x < LONG_SIDE; ++x) {
+      uint8_t idx = invader5[y][x];
+      setTablePixelrgb(x, y, ipalette5[idx]);
+    }
+  }
+  FastLED.show();
+  delay(1000);
+}
 
 void initPixels(){
 
@@ -269,38 +308,8 @@ setTablePixel(6,1,WHITE);
     }
   }   
 */
-const CRGB ipalette5[] = {
-{ 0, 0, 0}, 
-{255, 0, 0},
-{0, 255, 0},
-{30, 30, 255},
-{100, 220, 220},
-{160, 190, 200},
-{ 100, 220, 250},
-{110, 80, 210},
-{ 210, 190, 200}
- };
 
-  const uint8_t invader5[10][15] = {
-  {1,1,1,0,2,2,2,3,0,0,0,3,4,0,0},
-  {1,0,0,1,0,2,0,0,3,0,3,0,4,0,0},
-  {1,0,0,1,0,2,0,0,0,3,0,0,4,0,0},
-  {1,1,1,0,0,2,0,0,3,0,3,0,4,0,0},
-  {1,0,0,0,2,2,2,3,0,0,0,3,4,4,4},
-  {5,5,5,0,6,6,0,7,7,7,0,8,0,0,0},
-  {0,5,0,6,0,0,6,7,0,0,7,8,0,0,0},
-  {0,5,0,6,0,0,6,7,7,7,0,8,0,0,0},
-  {0,5,0,6,6,6,6,7,0,0,7,8,0,0,0},
-  {0,5,0,6,0,0,6,7,7,7,0,8,8,8,0}
-};
-
-  for (uint8_t y = 0; y < SHORT_SIDE; ++y) {
-    for (uint8_t x = 0; x < LONG_SIDE; ++x) {
-      uint8_t idx = invader5[y][x];
-      setTablePixelrgb(x, y, ipalette5[idx]);
-    }
-  }
-  FastLED.show();
+ displayLogo();
  delay(2000);
  fadeOut();
 }
@@ -421,7 +430,7 @@ void initPixelsv(){
       setTablePixelv(x, y, 0);
     }
   }   
-
+  delay(1000);
 }
 
 
@@ -654,9 +663,10 @@ void testMatrix() {
 void setup(){
   Serial.begin(115200);
 //  Serial.begin(9600);
-
+/*
   X_init = analogRead(X_pin);
   Y_init = analogRead(Y_pin);  
+*/
   pinMode(SW_pin,INPUT_PULLUP);
   pinMode(L_pin,INPUT_PULLUP);
   pinMode(R_pin,INPUT_PULLUP);

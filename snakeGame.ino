@@ -160,16 +160,27 @@ void runSnake(){
         break;
       } 
       now=millis();
-      if ( (curControl != BTN_NONE && now-dirChanged>BUTTIME) && ( !(curControl&BTN_LEFT) || !(curControl&BTN_RIGHT) ) ){//Can only change direction once per loop
+
+      if (NBPLAYER ==1)
+      {
+       if ( (curControl != BTN_NONE && now-dirChanged>BUTTIME) && ( !(curControl&BTN_LEFT) || !(curControl&BTN_RIGHT) ) ){//Can only change direction once per loop
+          dirChanged=millis(); 
+          setDirection();
+      }
+         
+      }
+      else
+      {
+      if ( (curControl != BTN_NONE && now-dirChanged>BUTTIME) && ( !(curControl&BTN_LEFT) || !(curControl&BTN_UP) ) ){//Can only change direction once per loop
           dirChanged=millis(); 
           setDirectionJ1();
       }
         
-      if ( (curControl != BTN_NONE && now-dirChanged2>BUTTIME) && ( !(curControl&BTN_UP) || !(curControl&BTN_DOWN) ) ){//Can only change direction once per loop
+      if ( (curControl != BTN_NONE && now-dirChanged2>BUTTIME) && ( !(curControl&BTN_DOWN) || !(curControl&BTN_RIGHT) ) ){//Can only change direction once per loop
           dirChanged2 =millis();
           setDirectionJ2();
       }
-    
+      }
  /*     
       if (curControl != BTN_NONE && !dirChanged){//Can only change direction once per loop
         dirChanged = true;
@@ -184,12 +195,13 @@ void runSnake(){
   
   fadeOut();
 
-  printNumber (score[0], 0, 0, RED);
-  printNumber (score[1], 8,0, YELLOW);
+  printNumber (score[0], 0, 0, snakecol[0]);
+  printNumber (score[1], 8, 0, snakecol[1]);
   
   showPixels();
-  delay (5000);
-  fadeOut();   
+  delay (4000);
+  fadeOut();
+  displayLogo();   
 /*
   char buf[4];
   int len = sprintf(buf, "%i", score[0]);
@@ -198,7 +210,8 @@ void runSnake(){
 }
 
 /* Set direction from current button state */
-void setDirectionJ1(){
+
+void setDirection(){
 
   if (curControl & BTN_LEFT)
   {
@@ -212,13 +225,27 @@ void setDirectionJ1(){
   }
 }
 
+void setDirectionJ1(){
+
+  if (curControl & BTN_LEFT)
+  {
+     dir[0]--;
+      if (dir[0]==0) dir[0]=4;    
+  }
+  if (curControl & BTN_UP)
+  {
+      dir[0]++;
+      if (dir[0]==5) dir[0]=1;
+  }
+}
+
 void setDirectionJ2(){
   if (curControl & BTN_DOWN) 
   {
       dir[1]--;
       if (dir[1]==0) dir[1]=4;
   }
-  if (curControl & BTN_UP)
+  if (curControl & BTN_RIGHT)
   {
       dir[1]++;
       if (dir[1]==5) dir[1]=1;

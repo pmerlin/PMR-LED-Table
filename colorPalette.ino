@@ -129,6 +129,7 @@ void runColorPalette(){
     while ((curTime - prevUpdateTime) <20);//Once enough time  has passed, proceed. The lower this number, the faster the game is
     prevUpdateTime = curTime;
   }
+  displayLogo();
 }
 
 void runRainbowPalette(){

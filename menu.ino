@@ -6,7 +6,7 @@
  */
 
 #define MINSELECTION  1
-#define MAXSELECTION  10
+#define MAXSELECTION  11
 
 //PMR
 unsigned int curSelection = MINSELECTION;
@@ -20,7 +20,9 @@ void mainLoop(void){
   unsigned long prevUpdateTime = 0;
 
 //runTest();
-runSnake();
+//runSnake();
+runDP();
+
   
   while(true){
     //Show menu system and wait for input
@@ -54,8 +56,11 @@ runSnake();
         curSelectionText = "9 Bricks";
         break;       
       case 10:
-        curSelectionText = "0 Test";
+        curSelectionText = "10 Test";
         break;
+      case 11:
+        curSelectionText = "11 GameOfLife";
+        break;      
       
     }
     curSelectionTextLength=strlen(curSelectionText);
@@ -69,13 +74,15 @@ runSnake();
       unsigned long curTime;
       do{
         readInput();
-        if (curControl != BTN_NONE){
+        if (curControl != BTN_NONE){        
           if (curControl == BTN_LEFT){
             curSelection--;
             selectionChanged = true;
+            delay(400);
           } else if (curControl == BTN_RIGHT){
             curSelection++;
             selectionChanged = true;
+            delay(400);
           } else if (curControl == BTN_START){
             runSelection = true;
           }
@@ -108,7 +115,7 @@ runSnake();
           runVUmeter();
           break;
         case 5:
-          runDice();
+          runDP();
           break;
         case 6:
           runTetris();
@@ -124,6 +131,9 @@ runSnake();
           break;        
         case 10:
           runTest();
+          break;                           
+        case 11:
+          runGameofLife();
           break;                           
       }
     } else {

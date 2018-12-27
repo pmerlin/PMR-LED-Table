@@ -134,6 +134,7 @@ void initApp(){
   printNumber (99, 8,0, YELLOW);
   showPixels();
   delay (5000);
+  clearTablePixels();
 }
 
 void runTest(){
@@ -191,45 +192,7 @@ void runTest(){
     DelayAndTestExit(DELAY);
   }
 
-/*    
-    dimLeds(0.97);
-    
-    //Create new stars if enough time has passed since last time
-    curTime = millis();
-    if ((curTime - prevStarsCreationTime) > 1600){
-      for (int i=0; i<NB_NEWSTARS; i++){
-        boolean positionOk = false;
-        int n = 0;
-        //Generate random positions until valid
-        while (!positionOk){
-          n = random(FIELD_WIDTH*FIELD_HEIGHT);
-          if (getPixel(n) == 0)
-            positionOk = true;
-        }
-//        //Get random color
-          if (random(2)==0)
-          setPixel(n,YELLOW);
-          else
-          setPixel(n,BLUE);
-      }
-      prevStarsCreationTime = curTime;
-    }
-*/ 
-/* 
-    showPixels();
-    
-    //Check input keys
-    do{
-      readInput();
-      if (curControl == BTN_EXIT){
-        AppRunning = false;
-        break;
-      }
-      curTime = millis();
-      delay(10);
-    } 
-    while ((curTime - prevUpdateTime) <80);//Once enough time  has passed, proceed. The lower this number, the faster the game is
-    prevUpdateTime = curTime;
-  */
+
   }
+  displayLogo();
 }
