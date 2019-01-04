@@ -1,8 +1,8 @@
 /* LedTable
  *
- * Written by: Klaas De Craemer, Ing. David Hrbaty
+ * Written by: Patrick MERLIN
  * 
- * Basic animation with fading stars
+ * Simple animations
  */
 
 #define DELAY 60
@@ -103,8 +103,6 @@ void displayDoubleImage(const uint64_t image)
   }
 }
 
-boolean AppRunning;
-
 void DelayAndTestExit(int time){
   static unsigned long prevUpdateTime = 0;
   static unsigned long curTime = 0;
@@ -126,8 +124,8 @@ void DelayAndTestExit(int time){
 
 
 
-void initApp(){
-  AppRunning = true;
+void initTest(){
+  appRunning = true;
   countDown(3);
 
   printNumber (15, 0, 0, RED);
@@ -140,14 +138,14 @@ void initApp(){
 void runTest(){
   clearTablePixels();
   showPixels();
-  initApp();  
+  initTest();  
 
 
   
-  while(AppRunning)
+  while(appRunning)
   {
 
-  if (AppRunning)  for (int d=0; d<5; d++)
+  if (appRunning)  for (int d=0; d<5; d++)
   {
   for (int c=1; c<6; c++)
   {
@@ -155,14 +153,14 @@ void runTest(){
     DelayAndTestExit(DELAY);
   }
  
-  if (AppRunning) for (int c=6-2; c>=0; c--)
+  if (appRunning) for (int c=6-2; c>=0; c--)
   {
     displayDoubleImage(IMAGES5[c]);
     DelayAndTestExit(DELAY);
   }
   }
 
-  if (AppRunning) for (int d=0; d<5; d++)
+  if (appRunning) for (int d=0; d<5; d++)
   {
   for (int c=0; c<IMAGES_LEN; c++)
   {
@@ -170,7 +168,7 @@ void runTest(){
     DelayAndTestExit(DELAY);
   }
  
-  if (AppRunning) for (int c=IMAGES_LEN-1; c>=0; c--)
+  if (appRunning) for (int c=IMAGES_LEN-1; c>=0; c--)
   {
     displayDoubleImage(IMAGES2[c]);
     DelayAndTestExit(DELAY);
@@ -178,14 +176,14 @@ void runTest(){
   }
 
 
-  if (AppRunning) for (int d=0; d<10; d++)
+  if (appRunning) for (int d=0; d<10; d++)
   for (int c=0; c<6; c++)
   {
     displayDoubleImage(IMAGES3[c]);
     DelayAndTestExit(DELAY);
   }
 
-  if (AppRunning) for (int d=0; d<10; d++)
+  if (appRunning) for (int d=0; d<10; d++)
   for (int c=0; c<IMAGES_LEN; c++)
   {
     displayDoubleImage(IMAGES[c]);

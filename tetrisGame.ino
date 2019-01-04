@@ -34,6 +34,7 @@ void runTetris(void){
       readInput();
       if (curControl & BTN_UP) delay (400);
       if (curControl & BTN_DOWN) delay (100);
+      if (curControl & BTN_LEFT || curControl & BTN_RIGHT) delay (75);
       if (curControl != BTN_NONE){
         playerControlActiveBrick();
         printField();

@@ -6,7 +6,7 @@
 */
 
 #define  gameoflifedelay 700 //300
-boolean GameofLiferunning = false;
+//boolean GameofLiferunning = false;
 long density = 50;
 int generation = 0;
 
@@ -120,7 +120,8 @@ int neighbours(int x, int y) {
 }
 
 void initGameofLife() {
-  GameofLiferunning = true;
+//  GameofLiferunning = true;
+  appRunning=true;
 
   clearTablePixels();
 //  showPixels();
@@ -133,7 +134,7 @@ void runGameofLife() {
 }
 
 void runGameofLifecode() {
-  while (GameofLiferunning) {
+  while (appRunning) {
     if (generation == 0) {
       //fadeOut();
 
@@ -273,7 +274,7 @@ delay(gameoflifedelay);
     readInput();
     if (curControl == BTN_EXIT) {
       Serial.println("EXIT");
-      GameofLiferunning = false;
+      appRunning = false;
       break;
     }
   }

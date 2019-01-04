@@ -1,15 +1,12 @@
 /* LedTable
  *
- * Written by: Ing. David Hrbaty
- * 
- * 
- * Main code for Dice game
+ * Written by: Patrick MERLIN
+ * Main code for DaftPunk Table
  */
  
-//#include "diceCommon.h"
-//#define MATH_ANIMATION 20
-boolean dpRunning;
-boolean diceMath;
+
+//boolean dpRunning;
+
 uint8_t printmode=0;
 
 // https://xantorohara.github.io/led-matrix-editor/
@@ -51,8 +48,8 @@ const int DAFTPUNK_LEN = sizeof(DAFTPUNK)/8;
 
                
 void initDP() {
-  dpRunning = true;
- // diceMath = false;
+  appRunning = true;
+
 //  randomSeed(analogRead(0));
   clearTablePixels();
   showPixels();
@@ -105,11 +102,10 @@ void displayImageDP(uint64_t image)
 
 void runDP() {
   initDP();
-  unsigned long prevUpdateTime = 0;
   unsigned long curTime, click=0;
   uint8_t i = 1;
 
-  while(dpRunning) 
+  while(appRunning) 
   {
     displayImageDP(DAFTPUNK[i]);
     if (++i >= DAFTPUNK_LEN ) i = 0;
@@ -119,7 +115,7 @@ void runDP() {
     {
       readInput();
       if (curControl == BTN_EXIT){
-        dpRunning = false;
+        appRunning = false;
         break;
       }
       else if (curControl != BTN_NONE && millis()-click > 600)
@@ -128,26 +124,10 @@ void runDP() {
         click=millis();
         clearTablePixels();
       }
-      
-//      delay(550);
+
     }
     while ((millis()- curTime) <1000);//Once enough time  has passed, proceed. The lower this number, the faster the game is //20
-//    prevUpdateTime = curTime;
+
   }
   displayLogo();
 }
-/*
-void printDice(const boolean dice[][10]){
-  int x,y;
-  for (x=0;x<FIELD_WIDTH;x++){
-    for (y=0;y<FIELD_HEIGHT;y++){
-      if (pgm_read_byte_near ( &dice[x][y]) == 1){
-        setTablePixel(y,x, YELLOW);
-      } else {
-        setTablePixel(y,x, 0x000000);
-      }
-    }
-  }
-  showPixels();
-}
-*/

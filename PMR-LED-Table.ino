@@ -114,6 +114,7 @@ Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
 */
 
 uint8_t curControl = BTN_NONE;
+boolean appRunning = false;
 SoftwareSerial bluetooth(10, 11);
 
 
@@ -270,7 +271,7 @@ void displayLogo(){
     }
   }
   FastLED.show();
-  delay(1000);
+  delay(2000);
 }
 
 void initPixels(){
