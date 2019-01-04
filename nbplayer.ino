@@ -99,7 +99,7 @@ void runNbPlayer(){
 
   
     for (int x=0; x>-(size); x--){
-      printText3(text, x, 0, color);
+      printText3(text, x, 0, col);
 //      showPixels();
     
 //// some stuff
@@ -124,11 +124,10 @@ void runNbPlayer(){
           else if (nbPlayer>MAXPLAYER) nbPlayer=MAXPLAYER;
         
  //         clearTablePixels();
-        }
+        }      
       }
-      
+      while ((millis()- curTime) <350); ;//Once enough time  has passed, proceed. The lower this number, the faster the game is
     }
-    while ((millis()- curTime) <350); ;//Once enough time  has passed, proceed. The lower this number, the faster the game is
   }
   displayLogo();
 }
