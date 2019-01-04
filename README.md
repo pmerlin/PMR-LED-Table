@@ -1,7 +1,7 @@
-IKEA-LED-Table
+PMR-LED-Table
 =======
 
-Interactive IKEA LED Table based on Arduino 
+Interactive  LED Table based on Arduino 
 
 Video:
 -------
@@ -22,3 +22,7 @@ Remote controller was fully printed on 3D printer and is based on Arduino Pro Mi
 8. Pong game
 9. Bricks game
 
+TDB
+Connect 4
+Space Invader
+more games
