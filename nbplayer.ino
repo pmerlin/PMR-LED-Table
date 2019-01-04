@@ -4,6 +4,7 @@
 #include "font2.h"
 
 boolean letter[3][5];
+#define DECAL 4
 
 void loadLetter(char l)
 {
@@ -82,13 +83,13 @@ void runNbPlayer(){
   unsigned long col[2];
   col[0]= YELLOW;
   col[1]= RED;
-  char *text= "NB PLAYER";
-  int size=strlen(text)*3;
+  char *text= "NB PLAYER ";
+  int size=(strlen(text)*3) + DECAL;
 
   
 //  unsigned long prevStarsCreationTime = 0;
 //  unsigned long prevUpdateTime = 0;
-  unsigned long curTime, click;
+  unsigned long curTime, click=0;
   
   while(appRunning){
  
@@ -99,7 +100,7 @@ void runNbPlayer(){
 
   
     for (int x=0; x>-(size); x--){
-      printText3(text, x, 0, col);
+      printText3(text, x+DECAL, 0, col);
 //      showPixels();
     
 //// some stuff
@@ -114,11 +115,11 @@ void runNbPlayer(){
           appRunning = false;
           break;
         }
-        else if (curControl != BTN_NONE && millis()-click > 600)
+        else if (curControl != BTN_NONE && millis()-click > 249)
         {
           click=millis();
-          if (curControl == BTN_RIGHT) nbPlayer++;
-          else if (curControl == BTN_LEFT) nbPlayer--;
+          if (curControl & BTN_RIGHT) nbPlayer++;
+          else if (curControl & BTN_LEFT) nbPlayer--;
 
           if (nbPlayer<MINPLAYER) nbPlayer=MINPLAYER;
           else if (nbPlayer>MAXPLAYER) nbPlayer=MAXPLAYER;
@@ -126,7 +127,7 @@ void runNbPlayer(){
  //         clearTablePixels();
         }      
       }
-      while ((millis()- curTime) <350); ;//Once enough time  has passed, proceed. The lower this number, the faster the game is
+      while ((millis()- curTime) <250); ;//Once enough time  has passed, proceed. The lower this number, the faster the game is
     }
   }
   displayLogo();
