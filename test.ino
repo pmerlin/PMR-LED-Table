@@ -111,7 +111,7 @@ void DelayAndTestExit(int time){
     do{
       readInput();
       if (curControl == BTN_EXIT){
-        AppRunning = false;
+        appRunning = false;
         break;
       }
       curTime = millis();

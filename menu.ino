@@ -6,7 +6,7 @@
  */
 
 #define MINSELECTION  1
-#define MAXSELECTION  11
+#define MAXSELECTION  12
 
 //PMR
 unsigned int curSelection = MINSELECTION;
@@ -19,15 +19,20 @@ void mainLoop(void){
   int curSelectionTextLength;
   unsigned long prevUpdateTime = 0;
 
+  char* SelectionText[]= { "0 Menu,", "1 Rainbow", "2 Animation", "3 Stars", "4 Vu Meter", "5 DaftPunk", "6 Tetris", "7 Snake", "8 Pong", "9 Bricks", "10 Test", "11 GameOfLife", "12 Nb Player" };
+
+runNbPlayer();
 //runTest();
 //runSnake();
 //runDP();
-runColorPalette();
+//runColorPalette();
 
   
   while(true){
     //Show menu system and wait for input
     clearTablePixels();
+    curSelectionText= SelectionText[curSelection];
+    /*
     switch (curSelection){
       case 1:
         curSelectionText = "1 Rainbow";
@@ -64,6 +69,7 @@ runColorPalette();
         break;      
       
     }
+    */
     curSelectionTextLength=strlen(curSelectionText);
     
     boolean selectionChanged = false;
@@ -135,6 +141,9 @@ runColorPalette();
           break;                           
         case 11:
           runGameofLife();
+          break;       
+        case 12:
+          runNbPlayer();
           break;                           
       }
     } else {

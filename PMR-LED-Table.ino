@@ -114,7 +114,11 @@ Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
 */
 
 uint8_t curControl = BTN_NONE;
+#define MINPLAYER 1
+#define MAXPLAYER 8
+uint8_t nbPlayer = MINPLAYER ;
 boolean appRunning = false;
+
 SoftwareSerial bluetooth(10, 11);
 
 
