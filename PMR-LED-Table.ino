@@ -165,24 +165,7 @@ void printNumber (uint8_t num, uint8_t x, uint8_t y, unsigned long col)
 
 void readInput(){
   curControl = BTN_NONE;
-/*  
-  char keypressed = myKeypad.getKey();
-  if (keypressed != NO_KEY)
-  {
-    if ( keypressed == 'S')
-      curControl = BTN_START;
-    else if ( keypressed == 'E')
-      curControl = BTN_EXIT;
-    else if ( keypressed == 'U')
-      curControl = BTN_UP;
-    else if ( keypressed == 'D')
-      curControl = BTN_DOWN;
-    else if ( keypressed == 'R')
-      curControl = BTN_RIGHT;
-    else if ( keypressed == 'L')
-      curControl = BTN_LEFT;                  
-  }
-*/
+
   if (!digitalRead(SW_pin) || !digitalRead(S_pin) )
     curControl += BTN_START;
   if (!digitalRead(L_pin))
@@ -196,22 +179,7 @@ void readInput(){
   if (!digitalRead(E_pin))
     curControl += BTN_EXIT;
 
-  
-//    curControl = BTN_EXIT;
-/*
-  if(analogRead(X_pin)-X_init < -30)
-    curControl += BTN_UP;
-  else if(analogRead(X_pin)-X_init > 30)
-    curControl += BTN_DOWN;
-  else if(analogRead(Y_pin)-Y_init < -30)
-    curControl += BTN_RIGHT;
-  else if(analogRead(Y_pin)-Y_init > 30)
-    curControl =+ BTN_LEFT;
-    */
-//  else  curControl = BTN_NONE;  
-
   Serial.print(curControl);
-  delay(20);
 /*  
   if (bluetooth.available() > 0) {
     // read the incoming byte:
@@ -504,7 +472,9 @@ void clearTablePixels(){
 
 void scrollTextBlocked(char* text, int textLength, int color){
   unsigned long prevUpdateTime = 0;
+#ifdef DEBUG
   Serial.println(-textLength);
+#endif
   
   for (int x=SHORT_SIDE; x>-(textLength*8); x--){
     printText(text, textLength, x, 2, color);
@@ -682,6 +652,92 @@ void dimLeds(float factor){
 */
   }
 }
+
+
+#include "font2.h"
+/*
+boolean letter[3][5];
+
+void loadLetter(char l)
+{
+  uint8_t col;
+//  int letterIdx = (l-32)*3;
+  
+  for (uint8_t x=0; x<4; x++)
+  {
+    if (x==3) col = 0;
+    else col=Wendy3x5[ (l-32)*3 +x ];
+
+    for (uint8_t y=0; y<5; y++)
+    {
+      if (bitRead(col, y) )
+        letter[x][y] = true;
+      else
+        letter[x][y] = false;
+    } 
+  }
+}
+*/
+
+void printText4(char* text, uint8_t xoffset, uint8_t yoffset, unsigned long color[2] ){
+//  uint8_t curLetterWidth = 0;
+  uint8_t curX = xoffset, col;
+  
+  //Loop over all the letters in the string
+  for (uint8_t i=0; i<strlen(text); i++){
+//    loadLetter(text[i]);
+    
+     
+    //Loop until width of letter is reached
+    for (uint8_t lx=0; lx<4; lx++){
+      curX= 4*i + xoffset +lx;
+      if (lx==3) col = 0;
+      else col=Wendy3x5[ (text[i]-32)*3 +lx ];
+      
+      //Now copy column per column to field (as long as within the field
+      if ( curX < LONG_SIDE && curX >= 0)   //If we are to far to the right, stop loop entirely
+ //     if ( curX < 0) break;//If we are to far to the right, stop loop entirely      
+    
+      for (uint8_t ly=0; ly<5; ly++){//Finally copy column
+//        if (letter[lx][ly])
+        if ( bitRead(col, ly) )
+          setTablePixel(curX, yoffset+ly, color[i%2]);
+        else
+          setTablePixel(curX, yoffset+ly, BLACK);
+      }
+    }
+  }
+}
+
+void printText3(char* text, uint8_t xoffset, uint8_t yoffset, unsigned long color[2] ){
+//  uint8_t curLetterWidth = 0;
+  uint8_t curX = xoffset, col;
+  
+  //Loop over all the letters in the string
+  for (uint8_t i=0; i<strlen(text); i++){
+//    loadLetter(text[i]);
+    
+     
+    //Loop until width of letter is reached
+    for (uint8_t lx=0; lx<3; lx++){
+      curX= 3*i + xoffset +lx;
+      col=Wendy3x5[ (text[i]-32)*3 +lx ];
+      //Now copy column per column to field (as long as within the field
+      if ( curX < LONG_SIDE && curX >= 0)   //If we are to far to the right, stop loop entirely
+ //     if ( curX < 0) break;//If we are to far to the right, stop loop entirely      
+    
+      for (uint8_t ly=0; ly<5; ly++){//Finally copy column
+//        if (letter[lx][ly])
+        if ( bitRead(col, ly) )
+          setTablePixel(curX, yoffset+ly, color[i%2]);
+        else
+          setTablePixel(curX, yoffset+ly, BLACK);
+      }
+    }
+  }
+}
+
+
 
 void testMatrix() {
     setTablePixel(0, 0, WHITE);

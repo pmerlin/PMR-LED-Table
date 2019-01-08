@@ -74,9 +74,19 @@ runNbPlayer();
     
     boolean selectionChanged = false;
     boolean runSelection = false;
+/*
+  unsigned long col[2];
+  col[0]= YELLOW;
+  col[1]= RED;
+  int size=strlen(curSelectionText)*3;
+*/    
     //Scroll current selection text from right to left;
     for (int x=LONG_SIDE; x>-(curSelectionTextLength*8); x--){
+//    for (int x=0; x>-(size); x--){
+
       printText(curSelectionText, curSelectionTextLength, x, (SHORT_SIDE-8)/2, YELLOW);
+//      printText3(curSelectionText, x, 3, col );
+
       //Read buttons
       unsigned long curTime;
       do{
