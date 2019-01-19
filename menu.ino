@@ -21,9 +21,9 @@ void mainLoop(void){
 
   char* SelectionText[]= { "0 Menu,", "1 Rainbow", "2 Animation", "3 Stars", "4 Vu Meter", "5 DaftPunk", "6 Tetris", "7 Snake", "8 Pong", "9 Bricks", "10 Test", "11 GameOfLife", "12 Nb Player" };
 
-runNbPlayer();
+//runNbPlayer();
 //runTest();
-//runSnake();
+runSnake();
 //runDP();
 //runColorPalette();
 

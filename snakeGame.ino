@@ -5,8 +5,8 @@
  * Snake game
  */
 
-#define SPEED 600
-#define BUTTIME 601
+#define SPEED 500
+#define BUTTIME 500
 
 void snakeInit(){
   //Snake start position and direction & initialise variables
@@ -148,11 +148,12 @@ void runSnake(){
     showPixels();
 
     //Check buttons and set snake movement direction while we are waiting to draw the next move
-    unsigned long curTime = millis(), now;
+    unsigned long curTime, now;
 //    uint8_t  dirChanged = 0;
     static long  dirChanged= 0;//= false;
     static long  dirChanged2=0;// = false;
-    
+
+    curTime = millis();
     do{
       readInput();
       if (curControl == BTN_EXIT){
@@ -161,25 +162,30 @@ void runSnake(){
       } 
       now=millis();
 
-      if (NBPLAYER ==1)
+      if ( curControl != BTN_NONE )
       {
-       if ( (curControl != BTN_NONE && now-dirChanged>BUTTIME) && ( !(curControl&BTN_LEFT) || !(curControl&BTN_RIGHT) ) ){//Can only change direction once per loop
-          dirChanged=millis(); 
-          setDirection();
-      }
-         
-      }
-      else
-      {
-      if ( (curControl != BTN_NONE && now-dirChanged>BUTTIME) && ( !(curControl&BTN_LEFT) || !(curControl&BTN_UP) ) ){//Can only change direction once per loop
-          dirChanged=millis(); 
-          setDirectionJ1();
-      }
+        if (NBPLAYER == 1)
+        {
+          if (  (now-dirChanged)>BUTTIME && ( !(curControl&BTN_LEFT) || !(curControl&BTN_RIGHT) ) )  //Can only change direction once per loop
+          {
+            dirChanged=now; 
+            setDirection();
+          }
+        }
+        else if (NBPLAYER == 2)
+        { 
+          if ( (now-dirChanged )>BUTTIME && ( !(curControl&BTN_LEFT) || !(curControl&BTN_UP) ) ) //Can only change direction once per loop
+          {
+            dirChanged=now; 
+            setDirectionJ1();
+          }
         
-      if ( (curControl != BTN_NONE && now-dirChanged2>BUTTIME) && ( !(curControl&BTN_DOWN) || !(curControl&BTN_RIGHT) ) ){//Can only change direction once per loop
-          dirChanged2 =millis();
-          setDirectionJ2();
-      }
+          if ( (now-dirChanged2)>BUTTIME && ( !(curControl&BTN_DOWN) || !(curControl&BTN_RIGHT) ) ) //Can only change direction once per loop
+          {
+            dirChanged2=now;
+            setDirectionJ2();
+          }
+        }
       }
  /*     
       if (curControl != BTN_NONE && !dirChanged){//Can only change direction once per loop

@@ -67,7 +67,7 @@ void runNbPlayer(){
 //        t=millis()-click;
   //      Serial.println(t);
         
-        if (curControl == BTN_EXIT){
+        if (curControl == BTN_EXIT || curControl == BTN_START){
           mappRunning = false;
           break;
         }

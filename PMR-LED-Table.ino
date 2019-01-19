@@ -84,14 +84,25 @@ unsigned int colorLib[3] = {YELLOW, BLUE, WHITE};
 #define  BTN_RIGHT  8
 #define  BTN_START  16
 #define  BTN_EXIT  32
+#define  BTN_UP2    64
+#define  BTN_DOWN2  128
+#define  BTN_LEFT2  256
+#define  BTN_RIGHT2  512
 
-#define  SW_pin  7 // digital pin connected to switch output
+
 #define L_pin 2
-#define R_pin 5
 #define U_pin 3
 #define D_pin 4
-#define S_pin 8
-#define E_pin 9
+#define R_pin 5
+
+#define E_pin 8
+#define S_pin 9
+
+#define L2_pin 10
+#define U2_pin 11
+#define D2_pin 12
+#define R2_pin 13
+
 
 /*
 #define X_pin  0 // analog pin connected to X output
@@ -113,7 +124,7 @@ byte colPins[numCols]= {37,35,33,31}; //Columns 0 to 3
 Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
 */
 
-uint8_t curControl = BTN_NONE;
+uint16_t curControl = BTN_NONE;
 #define MINPLAYER 1
 #define MAXPLAYER 8
 uint8_t nbPlayer = MINPLAYER ;
@@ -166,7 +177,7 @@ void printNumber (uint8_t num, uint8_t x, uint8_t y, unsigned long col)
 void readInput(){
   curControl = BTN_NONE;
 
-  if (!digitalRead(SW_pin) || !digitalRead(S_pin) )
+  if (!digitalRead(S_pin) )
     curControl += BTN_START;
   if (!digitalRead(L_pin))
     curControl += BTN_LEFT;
@@ -178,8 +189,20 @@ void readInput(){
     curControl += BTN_DOWN;
   if (!digitalRead(E_pin))
     curControl += BTN_EXIT;
+    
+  if (!digitalRead(L2_pin))
+    curControl += BTN_LEFT2;
+  if (!digitalRead(U2_pin))
+    curControl += BTN_UP2;
+    
+  if (!digitalRead(R2_pin))
+    curControl += BTN_RIGHT2;
 
-  Serial.print(curControl);
+  if (!digitalRead(D2_pin))
+    curControl += BTN_DOWN2;
+
+
+//  Serial.print(curControl);
 /*  
   if (bluetooth.available() > 0) {
     // read the incoming byte:
@@ -757,14 +780,18 @@ void setup(){
 /*
   X_init = analogRead(X_pin);
   Y_init = analogRead(Y_pin);  
-*/
   pinMode(SW_pin,INPUT_PULLUP);
+*/
   pinMode(L_pin,INPUT_PULLUP);
   pinMode(R_pin,INPUT_PULLUP);
   pinMode(U_pin,INPUT_PULLUP);
   pinMode(D_pin,INPUT_PULLUP);
   pinMode(S_pin,INPUT_PULLUP);
   pinMode(E_pin,INPUT_PULLUP);
+  pinMode(L2_pin,INPUT_PULLUP);
+  pinMode(R2_pin,INPUT_PULLUP);
+  pinMode(U2_pin,INPUT_PULLUP);
+  pinMode(D2_pin,INPUT_PULLUP);
 
   
   //Wait for serial port to connect
