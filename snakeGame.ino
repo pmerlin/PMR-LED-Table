@@ -15,7 +15,7 @@ void snakeInit(){
   ys[0][0]=FIELD_HEIGHT/2; ys[0][1]=FIELD_HEIGHT/2; ys[0][2]=FIELD_HEIGHT/2;
   dir[0] = DIR_RIGHT;
 
-  if(NBPLAYER ==2) {
+  if(nbPlayer ==2) {
     curLength[1] = 3;
     xs[1][0]=11; xs[0][1]=12; xs[0][2]=13;
     ys[1][0]=FIELD_HEIGHT/2-1; ys[0][1]=FIELD_HEIGHT/2-1; ys[0][2]=FIELD_HEIGHT/2-1;
@@ -36,18 +36,29 @@ void snakeInit(){
 }
 
 void runSnake(){
-  snakeInit();
-  unsigned long prevUpdateTime = 0;
   boolean snakeRunning = true;
+
+  //Check buttons and set snake movement direction while we are waiting to draw the next move
+  unsigned long curTime, now;
+  unsigned long  dirChanged= 0;//= false;
+  unsigned long  dirChanged2=0;// = false;
+
   uint8_t i,j;
 
-  long snakecol[]= { WHITE, BLUE, GREEN };
+  unsigned long snakecol[]= { PURPLE , BLUE, GREEN };
+  unsigned long snakecolhead[4];
+
+  snakecolhead[0]=WHITE; //CRGB(0xFF0000);
+  snakecolhead[1]=LBLUE; //CRGB(0xFFFF00);
+  if (nbPlayer>2) nbPlayer=2;
+  
+  snakeInit();
   
   while(snakeRunning){    
     //Check self-collision with snake
     
 
-    for (j=0; j<NBPLAYER; j++)
+    for (j=0; j<nbPlayer; j++)
     {    
       int i=curLength[j]-1;
       while (i>=2){
@@ -65,7 +76,7 @@ void runSnake(){
     }
 
     //Check collision of snake head with apple
-    for (j=0; j<NBPLAYER; j++)
+    for (j=0; j<nbPlayer; j++)
     {
       if (collide(xs[j][0], ax, ys[j][0], ay, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH)){
         //Increase score and snake length;
@@ -96,7 +107,7 @@ void runSnake(){
     
     //Shift snake position array by one
     
-    for (j=0; j<NBPLAYER; j++)
+    for (j=0; j<nbPlayer; j++)
     {
       i = curLength[j]-1;
       while (i>=1){
@@ -121,7 +132,7 @@ void runSnake(){
     }
     
     //Check if outside playing field
-    for (j=0; j<NBPLAYER; j++)
+    for (j=0; j<nbPlayer; j++)
     {    
 //      if ((xs[j][0]<0) || (xs[j][0]>=FIELD_WIDTH) || (ys[j][0]<0) || (ys[j][0]>=FIELD_HEIGHT)){
         if (xs[j][0]<0) {xs[j][0] =FIELD_WIDTH -1;}
@@ -137,21 +148,18 @@ void runSnake(){
     setTablePixel(ax,ay,YELLOW);
 
     //Draw snake
-    for (j=0; j<NBPLAYER; j++)
+    for (j=0; j<nbPlayer; j++)
     {    
-      for (int i=0; i<curLength[j]; i++){
-        setTablePixel(xs[j][i], ys[j][i], snakecol[j]);
+      for (int i=0; i<curLength[j]; i++)
+      {
+        if(i==0) setTablePixel(xs[j][i], ys[j][i], snakecolhead[j]);//
+        else setTablePixel(xs[j][i], ys[j][i], snakecol[j]);
 //        setTablePixel(xs[0][i], ys[0][i], WHITE);
       }
     }
     
     showPixels();
 
-    //Check buttons and set snake movement direction while we are waiting to draw the next move
-    unsigned long curTime, now;
-//    uint8_t  dirChanged = 0;
-    static long  dirChanged= 0;//= false;
-    static long  dirChanged2=0;// = false;
 
     curTime = millis();
     do{
@@ -164,7 +172,7 @@ void runSnake(){
 
       if ( curControl != BTN_NONE )
       {
-        if (NBPLAYER == 1)
+        if (nbPlayer == 1)
         {
           if (  (now-dirChanged)>BUTTIME && ( !(curControl&BTN_LEFT) || !(curControl&BTN_RIGHT) ) )  //Can only change direction once per loop
           {
@@ -172,7 +180,7 @@ void runSnake(){
             setDirection();
           }
         }
-        else if (NBPLAYER == 2)
+        else if (nbPlayer == 2)
         { 
           if ( (now-dirChanged )>BUTTIME && ( !(curControl&BTN_LEFT) || !(curControl&BTN_UP) ) ) //Can only change direction once per loop
           {

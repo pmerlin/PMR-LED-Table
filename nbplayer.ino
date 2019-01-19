@@ -32,28 +32,26 @@ void initNbPlayer(){
 }
 
 void runNbPlayer(){
-  initNbPlayer();
-  unsigned long col[2];
-  col[0]= YELLOW;
-  col[1]= RED;
   char *text= "Select NB PLAYER ";
   int size=(strlen(text)*3) + DECAL;
-
-  
-//  unsigned long prevStarsCreationTime = 0;
-//  unsigned long prevUpdateTime = 0;
+  unsigned long PrintCol[2];
   unsigned long startTime, click=0, t;
+  PrintCol[0]= YELLOW;
+  PrintCol[1]= RED;
+
+
+  initNbPlayer();
   
   while(mappRunning){
  
-//    scrollText3 ("ABCDEFGHIJKLMNOPQRSTUVWXYZ ", 7, 0, col);
-//    scrollText3 ("abcdefghijklmnopqrstuvwxyz ", 0, 0, col);
-//    scrollText3 ("0123456789 ", 7, 0, col);
-//    printText3 ("NB PLAYER", -1, 0, col);
+//    scrollText3 ("ABCDEFGHIJKLMNOPQRSTUVWXYZ ", 7, 0, PrintCol);
+//    scrollText3 ("abcdefghijklmnopqrstuvwxyz ", 0, 0, PrintCol);
+//    scrollText3 ("0123456789 ", 7, 0, PrintCol);
+//    printText3 ("NB PLAYER", -1, 0, PrintCol);
 
   
     for (int x=0; x>-(size); x--){
-      printText3(text, x+DECAL, 0, col);
+      printText3(text, x+DECAL, 0, PrintCol);
 //      showPixels();
     
 //// some stuff

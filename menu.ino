@@ -18,6 +18,7 @@ void mainLoop(void){
   char* curSelectionText;
   int curSelectionTextLength;
   unsigned long prevUpdateTime = 0;
+  int8_t oldNbPlayer;
 
   char* SelectionText[]= { "0 Menu,", "1 Rainbow", "2 Animation", "3 Stars", "4 Vu Meter", "5 DaftPunk", "6 Tetris", "7 Snake", "8 Pong", "9 Bricks", "10 Test", "11 GameOfLife", "12 Nb Player" };
 
@@ -96,14 +97,32 @@ runSnake();
             curSelection--;
             selectionChanged = true;
             delay(400);
-          } else if (curControl == BTN_RIGHT){
+          } 
+          else if ( curControl & BTN_EXIT){
+            Serial.print(curControl);
+            oldNbPlayer=nbPlayer;
+            if  (curControl & BTN_LEFT) {nbPlayer=1; Serial.print("NB");}
+            else if  (curControl & BTN_UP) nbPlayer=2;
+            else if  (curControl & BTN_DOWN) nbPlayer=3;
+            else if  (curControl & BTN_RIGHT) nbPlayer=4;
+            if (oldNbPlayer != nbPlayer) 
+            {
+              Serial.print("PRINT");
+              clearTablePixels();
+ //             printText3 ("NbPla", 0, 0, PrintCol);
+              printNumber (nbPlayer, 4, 5, RED);
+              showPixels();
+              delay (1000);
+            }
+          }
+          else if (curControl == BTN_RIGHT){
             curSelection++;
             selectionChanged = true;
             delay(400);
-          } else if (curControl == BTN_START){
+          } 
+          else if (curControl == BTN_START){
             runSelection = true;
-          }
-          
+          } 
           checkSelectionRange();
         }
         curTime = millis();

@@ -115,7 +115,7 @@ void checkBallHitByPaddle() {
     else if(ballX < positionPlayer && ballX >= positionPlayer - PADDLE_SIZE / 2) // left side of paddle
     {
       yincrement = -1;
-      xincrement = max(-1,xincrement-1); 
+      xincrement = max(-1,(int)xincrement-1); 
 //      ballY = FIELD_WIDTH-2;
 //     ballY = LONG_SIDE-2;
       ballX = positionPlayer - PADDLE_SIZE / 2-1;
@@ -123,7 +123,7 @@ void checkBallHitByPaddle() {
     else if(ballX > positionPlayer && ballX <= positionPlayer + (PADDLE_SIZE-1) / 2) // right side of the paddle
     {
       yincrement = -1;
-      xincrement = min(1,xincrement+1); //right
+      xincrement = min(1,(int)xincrement+1); //right
  //     ballY = SHORT_SIDE-2;
       ballX = positionPlayer + (PADDLE_SIZE-1) / 2+1;
     }    

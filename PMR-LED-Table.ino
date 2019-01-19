@@ -14,7 +14,7 @@
 //#define COLOR_ORDER GRB
 //#define FAST_LED_CHIPSET WS2811
 #define FAST_LED_CHIPSET NEOPIXEL
-#define FAST_LED_DATA_PIN  6
+
 
 
 //LED field size
@@ -89,7 +89,23 @@ unsigned int colorLib[3] = {YELLOW, BLUE, WHITE};
 #define  BTN_LEFT2  256
 #define  BTN_RIGHT2  512
 
+//#define WEMOS 
+#ifdef WEMOS
+#define FAST_LED_DATA_PIN  D6
+#define L_pin D2
+#define U_pin D3
+#define D_pin D4
+#define R_pin D5
 
+#define E_pin D8
+#define S_pin D9
+
+#define L2_pin D10
+#define U2_pin D11
+#define D2_pin D12
+#define R2_pin D13
+#else
+#define FAST_LED_DATA_PIN  6
 #define L_pin 2
 #define U_pin 3
 #define D_pin 4
@@ -102,7 +118,7 @@ unsigned int colorLib[3] = {YELLOW, BLUE, WHITE};
 #define U2_pin 11
 #define D2_pin 12
 #define R2_pin 13
-
+#endif
 
 /*
 #define X_pin  0 // analog pin connected to X output
@@ -129,6 +145,8 @@ uint16_t curControl = BTN_NONE;
 #define MAXPLAYER 8
 uint8_t nbPlayer = MINPLAYER ;
 boolean appRunning = false;
+
+//unsigned long PrintCol[2];
 
 SoftwareSerial bluetooth(10, 11);
 
@@ -775,6 +793,9 @@ void testMatrix() {
     setTablePixel(9, 9, WHITE);
 }
 void setup(){
+//  PrintCol[0]= YELLOW;
+//  PrintCol[1]= RED;
+
   Serial.begin(115200);
 //  Serial.begin(9600);
 /*
