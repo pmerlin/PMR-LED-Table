@@ -59,12 +59,15 @@ CRGB leds[NUM_PIXELS];
 //BGR
 #define  BLACK  0x000000
 #define  GREEN  0x00FF00
+#define  LGREEN  0x007700
 #define  RED    0xFF0000
 #define  BLUE   0x0000FF
 #define  YELLOW 0xFFFF00
 #define  LBLUE  0x00FFFF
 #define  PURPLE 0xFF00FF
+#define  LPURPLE 0x770077
 #define  WHITE  0xFFFFFF
+#define  LWHITE 0x777777
 unsigned int colorLib[3] = {YELLOW, BLUE, WHITE};
 /* *** Game commonly used defines ** */
 #define  DIR_UP    1
@@ -143,7 +146,7 @@ Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
 uint16_t curControl = BTN_NONE;
 #define MINPLAYER 1
 #define MAXPLAYER 8
-uint8_t nbPlayer = 2; // MINPLAYER ;
+uint8_t nbPlayer = 4; // MINPLAYER ;
 uint8_t nbPlayerDie ;
 boolean appRunning = false;
 

@@ -36,18 +36,18 @@ void snakeInit(){
   
   if(nbPlayer > 2)
   {
-    ys[0][0]/=2; ys[0][1]/=2; ys[0][2]/=2;
-    ys[1][0]/=2; ys[1][1]/=2; ys[1][2]/=2;
+    ys[0][0]=2; ys[0][1]=2; ys[0][2]=2;
+    ys[1][0]=3; ys[1][1]=3; ys[1][2]=3;
 
     xs[2][0]=3; xs[2][1]=2; xs[2][2]=1;
-    ys[2][0]=FIELD_HEIGHT*3/4; ys[2][1]=FIELD_HEIGHT*3/4; ys[2][2]=FIELD_HEIGHT*3/4;
+    ys[2][0]=7; ys[2][1]=7; ys[2][2]=7;
     dir[2] = DIR_RIGHT;
   }
 
-  if(nbPlayer > 4)
+  if(nbPlayer > 3)
   {
     xs[3][0]=11; xs[3][1]=12; xs[3][2]=13;
-    ys[3][0]=FIELD_HEIGHT*3/4-1; ys[3][1]=FIELD_HEIGHT*3/4-1; ys[3][2]=FIELD_HEIGHT*3/4-1;
+    ys[3][0]=8; ys[3][1]=8; ys[3][2]=8;
     dir[3] = DIR_LEFT;   
   }
   
@@ -69,11 +69,14 @@ void runSnake(){
 
   uint8_t i,j,len;
 
-  unsigned long snakecol[]= { PURPLE , BLUE, GREEN };
-  unsigned long snakecolhead[4];
+  unsigned long snakecol[]= { PURPLE , BLUE, GREEN, WHITE };
+  unsigned long snakecolhead[MAXSNAKEPLAYER];
 
-  snakecolhead[0]=WHITE; //CRGB(0xFF0000);
+  snakecolhead[0]=LPURPLE; //CRGB(0xFF0000);
   snakecolhead[1]=LBLUE; //CRGB(0xFFFF00);
+  snakecolhead[2]=LGREEN;
+  snakecolhead[3]=LWHITE;
+  
   if (nbPlayer>MAXSNAKEPLAYER) nbPlayer=MAXSNAKEPLAYER;
   
   snakeInit();
