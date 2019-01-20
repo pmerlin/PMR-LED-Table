@@ -71,12 +71,10 @@ CRGB leds[NUM_PIXELS];
 unsigned int colorLib[3] = {YELLOW, BLUE, WHITE};
 /* *** Game commonly used defines ** */
 #define  DIR_UP    1
-//#define  DIR_DOWN  2
-//#define  DIR_LEFT  3
-//#define  DIR_RIGHT 4
+#define  DIR_RIGHT 2
 #define  DIR_DOWN  3
 #define  DIR_LEFT  4
-#define  DIR_RIGHT 2
+
 
 
 /* *** Bluetooth controller button defines and input method *** */
@@ -127,20 +125,6 @@ unsigned int colorLib[3] = {YELLOW, BLUE, WHITE};
 #define X_pin  0 // analog pin connected to X output
 #define Y_pin  1 // analog pin connected to Y output
 int X_init, Y_init;
-const byte numRows= 4; //number of rows on the keypad
-const byte numCols= 4; //number of columns on the keypad
-char keymap[numRows][numCols]=
-{
-{'E', 'U', '3', 'S'},
-{'L', '5', 'R', 'E'},
-{'7', 'D', '9', 'C'},
-{'*', '0', '#', 'D'}
-};
-
-//Code that shows the the keypad connections to the arduino terminals
-byte rowPins[numRows] = {45,43,41,39}; //Rows 0 to 3
-byte colPins[numCols]= {37,35,33,31}; //Columns 0 to 3
-Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
 */
 
 uint16_t curControl = BTN_NONE;
@@ -201,17 +185,19 @@ void readInput(){
 
   if (!digitalRead(S_pin) )
     curControl += BTN_START;
+  if (!digitalRead(E_pin))
+    curControl += BTN_EXIT;
+    
   if (!digitalRead(L_pin))
     curControl += BTN_LEFT;
   if (!digitalRead(U_pin))
     curControl += BTN_UP;
+    
   if (!digitalRead(R_pin))
     curControl += BTN_RIGHT;
   if (!digitalRead(D_pin))
     curControl += BTN_DOWN;
-  if (!digitalRead(E_pin))
-    curControl += BTN_EXIT;
-    
+        
   if (!digitalRead(L2_pin))
     curControl += BTN_LEFT2;
   if (!digitalRead(U2_pin))
@@ -219,7 +205,6 @@ void readInput(){
     
   if (!digitalRead(R2_pin))
     curControl += BTN_RIGHT2;
-
   if (!digitalRead(D2_pin))
     curControl += BTN_DOWN2;
 

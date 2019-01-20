@@ -11,7 +11,7 @@ uint8_t curLength[MAXSNAKEPLAYER]; //Curren length of snake
 int8_t xs[MAXSNAKEPLAYER][127]; //Array containing all snake segments,
 int8_t ys[MAXSNAKEPLAYER][127]; // max snake length is array length
 int8_t dir[MAXSNAKEPLAYER];     //Current Direction of snake
-int8_t alive[MAXSNAKEPLAYER];   //Is snake alive
+int8_t isDead[MAXSNAKEPLAYER];   //Is snake alive
 uint8_t score[MAXSNAKEPLAYER];
 #define SNAKEWIDTH  1 //Snake width
 

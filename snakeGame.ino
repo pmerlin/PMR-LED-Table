@@ -19,18 +19,17 @@ void snakeInit(){
   {
     curLength[i] = 3;
     score[i] = 0;
-    alive[i] =0;
+    isDead[i] =0;
   }
   
   xs[0][0]=3; xs[0][1]=2; xs[0][2]=1;
-  ys[0][0]=FIELD_HEIGHT/2; ys[0][1]=FIELD_HEIGHT/2; ys[0][2]=FIELD_HEIGHT/2;
+  ys[0][0]=4; ys[0][1]=4; ys[0][2]=4;
   dir[0] = DIR_RIGHT;
 
   if(nbPlayer >1)
   {
-   
-    xs[1][0]=11; xs[0][1]=12; xs[0][2]=13;
-    ys[1][0]=FIELD_HEIGHT/2-1; ys[1][1]=FIELD_HEIGHT/2-1; ys[1][2]=FIELD_HEIGHT/2-1;
+    xs[1][0]=11; xs[1][1]=12; xs[1][2]=13;
+    ys[1][0]=6; ys[1][1]=6; ys[1][2]=6;
     dir[1] = DIR_LEFT;
   }
   
@@ -52,11 +51,33 @@ void snakeInit(){
   }
   
   //Generate random apple position
+  newApple();
+  /*
+  
   ax = random(FIELD_WIDTH-1);
   ay = random(FIELD_HEIGHT-1);
   // TODO Check not snake position
-
+*/
   snakeGameOver = false;
+}
+
+void newApple()
+{
+  uint8_t i,j,collision; 
+  do
+  {
+    collision=0;
+    ax = random(FIELD_WIDTH-1);
+    ay = random(FIELD_HEIGHT-1);
+    for (j=0; j<nbPlayer; j++)
+      for(i=0; i<curLength[j]; i++)
+        if (checkCollision(ax, xs[j][i], ay, ys[j][i])) 
+        {
+          collision++;
+          break;
+        }
+   }
+   while (collision !=0)
 }
 
 void runSnake(){
@@ -64,9 +85,10 @@ void runSnake(){
 
   //Check buttons and set snake movement direction while we are waiting to draw the next move
   unsigned long curTime, now;
-  unsigned long dirChanged= 0;//= false;
-  unsigned long dirChanged2=0;// = false;
-
+  unsigned long dirChanged= 0;
+  unsigned long dirChanged2=0;
+  unsigned long dirChanged3=0;
+  unsigned long dirChanged4=0;
   uint8_t i,j,len;
 
   unsigned long snakecol[]= { PURPLE , BLUE, GREEN, WHITE };
@@ -86,7 +108,7 @@ void runSnake(){
     //Check collision with snake
     for (j=0; j<nbPlayer; j++)
     {
-      if ( alive[j] ) continue;   
+      if ( isDead[j] ) continue;   
       for (i=0; i<nbPlayer; i++)
       {
         if (i!=j) //not same snake
@@ -96,7 +118,7 @@ void runSnake(){
             if (checkCollision(xs[j][0], xs[i][len], ys[j][0], ys[i][len]))
             {
               Serial.println("\ncollision with other\n");
-              alive[j]++;
+              isDead[j]++;
               die();
               break;
             }
@@ -110,7 +132,7 @@ void runSnake(){
             if (checkCollision(xs[j][0], xs[j][len], ys[j][0], ys[j][len]))
             {
               Serial.println("\nself collision\n");
-              alive[j]++;
+              isDead[j]++;
               die();
               break;
             }
@@ -125,7 +147,7 @@ void runSnake(){
         if (checkCollision(xs[j][0], xs[j][len], ys[j][0], ys[j][len]))
         {
           Serial.println("collision");
-          alive[j]++;
+          isDead[j]++;
           die();
         }
         len--;
@@ -141,42 +163,29 @@ void runSnake(){
     //Check collision of snake head with apple
     for (j=0; j<nbPlayer; j++)
     {
-      if ( alive[j] ) continue;
+      if ( isDead[j] ) continue;
 //      if (collide(xs[j][0], ax, ys[j][0], ay, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH))
       if (checkCollision(xs[j][0], ax, ys[j][0], ay))
       {
+
+        //Add snake segment with temporary position of new segments
+ //       xs[j][curLength[j]] = xs[j][curLength[j]-1]; //TODO usefull ?
+ //       ys[j][curLength[j]] = ys[j][curLength[j]-1]; //
+ 
         //Increase score and snake length;
         score[j]++;
         curLength[j]++;
-        //Add snake segment with temporary position of new segments
-        xs[j][curLength[j]-1] = 150; //TODO usefull ?
-        ys[j][curLength[j]-1] = 150; //
-      
+              
         //Generate new apple position
+        newApple();
 
-        
-        do
-        {
-          len=0;
-          ax = random(FIELD_WIDTH-1);
-          ay = random(FIELD_HEIGHT-1);
-          for (j=0; j<nbPlayer; j++)
-            for(i=0; i<curLength[j]; i++)
-               if (checkCollision(ax, xs[j][i], ay, ys[j][i])) 
-               {
-                  len++;
-                  break;
-               }
-        }
-        while (len !=0);
       }
     }
     
-    //Shift snake position array by one
-    
+    //Shift snake position array by one   
     for (j=0; j<nbPlayer; j++)
     {
-      if ( alive[j] ) continue;
+      if ( isDead[j] ) continue;
       i = curLength[j]-1;
       while (i>=1){
         xs[j][i] = xs[j][i-1];
@@ -186,23 +195,27 @@ void runSnake(){
  
       //Determine new position of head of snake
       if (dir[j] == DIR_RIGHT){
-        xs[j][0]++ ;
+        xs[j][0]++;
+        if ( xs[j][0] == LONG_SIDE )  xs[j][0]=0;
       } 
       else if (dir[j] == DIR_LEFT){
+        if ( xs[j][0] == 0) xs[j][0]=LONG_SIDE;
         xs[j][0]--;
       } 
       else if (dir[j] == DIR_UP){
+        if ( ys[j][0] == 0) ys[j][0]=SHORT_SIDE;
         ys[j][0]--;
       } 
       else {//DOWN
         ys[j][0]++;
+        if ( ys[j][0] == SHORT_SIDE )  ys[j][0]=0;
       }
     }
     
     //Check if outside playing field
     for (j=0; j<nbPlayer; j++)
     {
-      if ( alive[j] ) break; 
+      if ( isDead[j] ) continue; 
 //      if ((xs[j][0]<0) || (xs[j][0]>=FIELD_WIDTH) || (ys[j][0]<0) || (ys[j][0]>=FIELD_HEIGHT)){
       if (xs[j][0]<0) {xs[j][0] =FIELD_WIDTH -1;}
       else if (xs[j][0]>=FIELD_WIDTH) {xs[j][0] = 0;}      
@@ -216,15 +229,15 @@ void runSnake(){
     //Draw apple
     setTablePixel(ax,ay,YELLOW);
 
-    //Draw snake
+    //Draw snakes
     for (j=0; j<nbPlayer; j++)
     {    
       for (i=0; i<curLength[j]; i++)
       {
-        if ( alive[j] ) setTablePixel(xs[j][i], ys[j][i], RED);
+        if ( isDead[j] ) setTablePixel(xs[j][i], ys[j][i], RED);
         else 
         {
-          if(i==0) setTablePixel(xs[j][i], ys[j][i], snakecolhead[j]);//
+          if(i==0) setTablePixel(xs[j][i], ys[j][i], snakecolhead[j]);
           else setTablePixel(xs[j][i], ys[j][i], snakecol[j]);
 //        setTablePixel(xs[0][i], ys[0][i], WHITE);
         }
@@ -255,40 +268,48 @@ void runSnake(){
             setDirection();
           }
         }
-        else if (nbPlayer == 2)
+        else if (nbPlayer >1)
         { 
           Serial.print(curControl);
           if ( (now-dirChanged )>BUTTIME && ( (curControl&BTN_LEFT) || (curControl&BTN_UP) ) ) //Can only change direction once per loop
           {
-            Serial.print("P1");
+//            Serial.print("P1");
             dirChanged=now; 
             setDirectionJ1();
           }
         
-          if ( (now-dirChanged2)>BUTTIME && ( (curControl&BTN_DOWN) || (curControl&BTN_RIGHT) ) ) //Can only change direction once per loop
+          if ( (now-dirChanged2)>BUTTIME  && ( (curControl&BTN_LEFT2) || (curControl&BTN_UP2) ) ) //Can only change direction once per loop
           {
-            Serial.print("P1");
+//            Serial.print("P2");
             dirChanged2=now;
             setDirectionJ2();
           }
+
+          if ( (nbPlayer >2) && (now-dirChanged3 )>BUTTIME &&( (curControl&BTN_DOWN) || (curControl&BTN_RIGHT) ) )
+          {
+//            Serial.print("P3");
+            dirChanged3=now;
+            setDirectionJ3();
+          }
+
+          if ( (nbPlayer >3) && (now-dirChanged4 )>BUTTIME && ( (curControl&BTN_DOWN2) || (curControl&BTN_RIGHT2) ) )
+          {
+//            Serial.print("P4");
+            dirChanged4=now;
+            setDirectionJ4();
+          }
         }
       }
- /*     
-      if (curControl != BTN_NONE && !dirChanged){//Can only change direction once per loop
-        dirChanged = true;
-        setDirection();
-      }      */
-
     } 
     while ( (millis() - curTime ) <SPEED);//Once enough time  has passed, proceed. The lower this number, the faster the game is // 
-
- //   prevUpdateTime = curTime;
   }
   
   fadeOut();
 
   printNumber (score[0], 0, 0, snakecol[0]);
-  if (nbPlayer == 2) printNumber (score[1], 8, 0, snakecol[1]);
+  if (nbPlayer > 1) printNumber (score[1], 8, 0, snakecol[1]);
+  if (nbPlayer > 2) printNumber (score[1], 0, 5, snakecol[2]);
+  if (nbPlayer > 3) printNumber (score[1], 8, 5, snakecol[3]);
   
   showPixels();
   delay (4000);
@@ -308,12 +329,12 @@ void setDirection(){
   if (curControl & BTN_LEFT)
   {
      dir[0]--;
-      if (dir[0]==0) dir[0]=4;    
+     if (dir[0]==0) dir[0]=4;    
   }
   if (curControl & BTN_RIGHT)
   {
-      dir[0]++;
-      if (dir[0]==5) dir[0]=1;
+     dir[0]++; 
+     if (dir[0]==5) dir[0]=1;
   }
 }
 
@@ -322,62 +343,55 @@ void setDirectionJ1(){
   if (curControl & BTN_LEFT)
   {
      dir[0]--;
-      if (dir[0]==0) dir[0]=4;    
+     if (dir[0]==0) dir[0]=4;    
   }
   if (curControl & BTN_UP)
   {
-      dir[0]++;
-      if (dir[0]==5) dir[0]=1;
+     dir[0]++;
+     if (dir[0]==5) dir[0]=1;
   }
 }
 
 void setDirectionJ2(){
+
+  if (curControl & BTN_UP2)
+  {
+     dir[1]--;
+     if (dir[1]==0) dir[1]=4;    
+  }
+  if (curControl & BTN_LEFT2)
+  {
+     dir[1]++;
+     if (dir[1]==5) dir[1]=1;
+  }
+}
+
+void setDirectionJ3()
+{
   if (curControl & BTN_DOWN) 
   {
-      dir[1]--;
-      if (dir[1]==0) dir[1]=4;
+     dir[2]--;
+     if (dir[2]==0) dir[2]=4;
   }
   if (curControl & BTN_RIGHT)
   {
-      dir[1]++;
-      if (dir[1]==5) dir[1]=1;
+     dir[2]++;
+     if (dir[2]==5) dir[2]=1;
   }
-/*
-  switch(curControl){
-    case BTN_LEFT:
-      dir[0]--;
-      if (dir[0]==0) dir[0]=4;
-      break;
-    case BTN_RIGHT:
-      dir[0]++;
-      if (dir[0]==5) dir[0]=1;
-      break;
-    case BTN_DOWN:
-      dir[1]--;
-      if (dir[1]==0) dir[1]=4;
-      break;
-    case BTN_UP:
-      dir[1]++;
-      if (dir[1]==5) dir[1]=1;
-      break;
+}
 
-    case BTN_LEFT:
-      dir = DIR_LEFT;
-      break;
-    case BTN_RIGHT:
-      dir = DIR_RIGHT;
-      break;
-    case BTN_DOWN:
-      dir = DIR_DOWN;
-      break;
-    case BTN_UP:
-      dir = DIR_UP;
-      break;
-      
-    case BTN_START:
-      break;
+void setDirectionJ4()
+{
+  if (curControl & BTN_RIGHT2) 
+  {
+      dir[3]--;
+      if (dir[3]==0) dir[3]=4;
   }
-  */
+  if (curControl & BTN_DOWN2)
+  {
+      dir[3]++;
+      if (dir[3]==5) dir[3]=1;
+  }
 }
 
 /* Ending, show score */
@@ -399,6 +413,7 @@ boolean checkCollision(int x1, int x2, int y1, int y2)
   return false;
 }
 
+/*
 boolean collide(int x1, int x2, int y1, int y2, int w1, int w2, int h1, int h2){
   if ((x1+w1>x2) && (x1<x2+w2) && (y1+h1>y2) && (y1<y2+h2)){
     return true;
@@ -407,3 +422,4 @@ boolean collide(int x1, int x2, int y1, int y2, int w1, int w2, int h1, int h2){
     return false;
   }
 }
+*/
