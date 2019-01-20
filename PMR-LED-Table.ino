@@ -143,7 +143,8 @@ Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
 uint16_t curControl = BTN_NONE;
 #define MINPLAYER 1
 #define MAXPLAYER 8
-uint8_t nbPlayer = MINPLAYER ;
+uint8_t nbPlayer = 2; // MINPLAYER ;
+uint8_t nbPlayerDie ;
 boolean appRunning = false;
 
 //unsigned long PrintCol[2];

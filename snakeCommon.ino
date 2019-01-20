@@ -6,12 +6,13 @@
  */
 
 /* ------ Game related ------ */
-#define MAXNBPLAYER 2
-uint8_t curLength[MAXNBPLAYER];//Curren length of snake
-int8_t xs[MAXNBPLAYER][127];//Array containing all snake segments,
-int8_t ys[MAXNBPLAYER][127];// max snake length is array length
-int8_t dir[MAXNBPLAYER];//Current Direction of snake
-uint8_t score[MAXNBPLAYER];
+#define MAXSNAKEPLAYER 4
+uint8_t curLength[MAXSNAKEPLAYER]; //Curren length of snake
+int8_t xs[MAXSNAKEPLAYER][127]; //Array containing all snake segments,
+int8_t ys[MAXSNAKEPLAYER][127]; // max snake length is array length
+int8_t dir[MAXSNAKEPLAYER];     //Current Direction of snake
+int8_t alive[MAXSNAKEPLAYER];   //Is snake alive
+uint8_t score[MAXSNAKEPLAYER];
 #define SNAKEWIDTH  1 //Snake width
 
 
