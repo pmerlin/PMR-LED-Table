@@ -77,7 +77,7 @@ void newApple()
           break;
         }
    }
-   while (collision !=0)
+   while (collision !=0);
 }
 
 void runSnake(){
@@ -258,17 +258,37 @@ void runSnake(){
 
       if ( curControl != BTN_NONE )
       {
+/*        
         Serial.print(curControl);
-        if (nbPlayer == 1)
+
+ */       
+        if (nbPlayer == 2)
         {
-          if (  (now-dirChanged)>BUTTIME && ( (curControl&BTN_LEFT) || (curControl&BTN_RIGHT) ) )  //Can only change direction once per loop
+          if ( (now-dirChanged )>BUTTIME && ( (curControl&BTN_LEFT) || (curControl&BTN_RIGHT) ) ) //Can only change direction once per loop
+          {
+//            Serial.print("P1");
+            dirChanged=now; 
+            setDirectionJ1_2();
+          }
+        
+          if ( (now-dirChanged2)>BUTTIME  && ( (curControl&BTN_LEFT2) || (curControl&BTN_RIGHT2) ) ) //Can only change direction once per loop
+          {
+//            Serial.print("P2");
+            dirChanged2=now;
+            setDirectionJ2_2();
+          }          
+        }
+        else if (nbPlayer == 1)
+        {
+          if (  (now-dirChanged)>BUTTIME &&  (curControl>BTN_START)  )  //Can only change direction once per loop
           {
             Serial.print("\nP1");
             dirChanged=now; 
             setDirection();
           }
         }
-        else if (nbPlayer >1)
+       
+        else if (nbPlayer >2)
         { 
           Serial.print(curControl);
           if ( (now-dirChanged )>BUTTIME && ( (curControl&BTN_LEFT) || (curControl&BTN_UP) ) ) //Can only change direction once per loop
@@ -298,7 +318,7 @@ void runSnake(){
             dirChanged4=now;
             setDirectionJ4();
           }
-        }
+        } 
       }
     } 
     while ( (millis() - curTime ) <SPEED);//Once enough time  has passed, proceed. The lower this number, the faster the game is // 
@@ -324,8 +344,22 @@ void runSnake(){
 
 /* Set direction from current button state */
 
-void setDirection(){
+void setDirection()
+{
+  if (curControl & BTN_LEFT || curControl & BTN_DOWN || curControl & BTN_RIGHT2 || curControl & BTN_UP2)
+  {
+     dir[0]--;
+     if (dir[0]==0) dir[0]=4;    
+  }
+  if (curControl & BTN_RIGHT ||  curControl & BTN_UP || curControl & BTN_LEFT2 || curControl & BTN_DOWN2)
+  {
+     dir[0]++; 
+     if (dir[0]==5) dir[0]=1;
+  }
+}
 
+void setDirectionJ1_2()
+{
   if (curControl & BTN_LEFT)
   {
      dir[0]--;
@@ -333,13 +367,27 @@ void setDirection(){
   }
   if (curControl & BTN_RIGHT)
   {
-     dir[0]++; 
+     dir[0]++;
      if (dir[0]==5) dir[0]=1;
   }
 }
 
-void setDirectionJ1(){
+void setDirectionJ2_2()
+{
+  if (curControl & BTN_RIGHT2)
+  {
+     dir[1]--;
+     if (dir[1]==0) dir[1]=4;    
+  }
+  if (curControl & BTN_LEFT2)
+  {
+     dir[1]++;
+     if (dir[1]==5) dir[1]=1;
+  }
+}
 
+void setDirectionJ1()
+{
   if (curControl & BTN_LEFT)
   {
      dir[0]--;
@@ -352,8 +400,8 @@ void setDirectionJ1(){
   }
 }
 
-void setDirectionJ2(){
-
+void setDirectionJ2()
+{
   if (curControl & BTN_UP2)
   {
      dir[1]--;

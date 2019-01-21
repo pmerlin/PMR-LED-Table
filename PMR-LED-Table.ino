@@ -79,16 +79,18 @@ unsigned int colorLib[3] = {YELLOW, BLUE, WHITE};
 
 /* *** Bluetooth controller button defines and input method *** */
 #define  BTN_NONE  0
-#define  BTN_UP    1
-#define  BTN_DOWN  2
-#define  BTN_LEFT  4
-#define  BTN_RIGHT  8
-#define  BTN_START  16
-#define  BTN_EXIT  32
+#define  BTN_EXIT  1
+#define  BTN_START 2
+
+#define  BTN_UP    4
+#define  BTN_DOWN  8
+#define  BTN_LEFT  16
+#define  BTN_RIGHT  32
+
 #define  BTN_UP2    64
 #define  BTN_DOWN2  128
 #define  BTN_LEFT2  256
-#define  BTN_RIGHT2  512
+#define  BTN_RIGHT2 512
 
 //#define WEMOS 
 #ifdef WEMOS
