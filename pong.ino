@@ -5,8 +5,32 @@
  * 
  * Main code for Pong game
  */
- 
-#include "pongCommon.h"
+
+
+#define PLAYER_HEIGHT 3
+#define MAX_SCORE 5
+#define AUTO_PLAYER_SPEED 200
+
+int scorePlayerLeft;
+int scorePlayerRight;
+  
+int positionPlayerLeft;
+int positionPlayerRight;
+  
+int ballx;
+int previousBallx;
+int bally;
+int previousBally;
+int velocityx;
+int velocityy;
+int ballBounces;
+  
+int gameSpeed;
+  
+unsigned long lastAutoPlayerMoveTime;
+unsigned long rumbleUntil;
+unsigned long waitUntil;
+
 unsigned long curTime;
 unsigned long prevUpdateTime = 0;
 void pongInit(){

@@ -1,12 +1,30 @@
 /* LedTable
  *
  * Written by: Klaas De Craemer, Ing. David Hrbaty
+ * Lots of improvement (2 to 4 players) Patrick MERLIN
  * 
  * Snake game
  */
 
 #define SPEED 500
 #define BUTTIME 500
+
+#define MAXSNAKEPLAYER 4
+uint8_t curLength[MAXSNAKEPLAYER]; //Curren length of snake
+int8_t xs[MAXSNAKEPLAYER][127]; //Array containing all snake segments,
+int8_t ys[MAXSNAKEPLAYER][127]; // max snake length is array length
+int8_t dir[MAXSNAKEPLAYER];     //Current Direction of snake
+int8_t isDead[MAXSNAKEPLAYER];   //Is snake alive
+uint8_t score[MAXSNAKEPLAYER];
+#define SNAKEWIDTH  1 //Snake width
+
+
+boolean snakeGameOver;
+
+uint8_t ax = 0;//Apple x position
+uint8_t ay = 0;//Apple y position
+//uint8_t acolor = BLUE;
+
 
 void snakeInit(){
   //Snake start position and direction & initialise variables
@@ -257,12 +275,23 @@ void runSnake(){
       now=millis();
 
       if ( curControl != BTN_NONE )
-      {
-/*        
+      {       
         Serial.print(curControl);
 
- */       
-        if (nbPlayer == 2)
+        switch(nbPlayer)
+        {
+        case 1:
+        {
+          if (  (now-dirChanged)>BUTTIME &&  (curControl>BTN_START)  )  //Can only change direction once per loop
+          {
+            Serial.print("\nP1");
+            dirChanged=now; 
+            setDirection();
+          }
+          break;
+        }
+        
+        case 2:
         {
           if ( (now-dirChanged )>BUTTIME && ( (curControl&BTN_LEFT) || (curControl&BTN_RIGHT) ) ) //Can only change direction once per loop
           {
@@ -276,19 +305,13 @@ void runSnake(){
 //            Serial.print("P2");
             dirChanged2=now;
             setDirectionJ2_2();
-          }          
-        }
-        else if (nbPlayer == 1)
-        {
-          if (  (now-dirChanged)>BUTTIME &&  (curControl>BTN_START)  )  //Can only change direction once per loop
-          {
-            Serial.print("\nP1");
-            dirChanged=now; 
-            setDirection();
           }
+          break;          
         }
-       
-        else if (nbPlayer >2)
+        
+        
+        case 3:
+        case 4:
         { 
           Serial.print(curControl);
           if ( (now-dirChanged )>BUTTIME && ( (curControl&BTN_LEFT) || (curControl&BTN_UP) ) ) //Can only change direction once per loop
@@ -318,7 +341,9 @@ void runSnake(){
             dirChanged4=now;
             setDirectionJ4();
           }
-        } 
+        }
+        break;
+        }
       }
     } 
     while ( (millis() - curTime ) <SPEED);//Once enough time  has passed, proceed. The lower this number, the faster the game is // 
