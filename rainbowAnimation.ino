@@ -5,13 +5,15 @@
  * Rainbow animation for the LED table. Code is based on the OctoWS2812 Rainbow example
  */
 
-#define  RAINBOWSPEED  250
+#define RAINBOWSPEED 250
 int rainbowColors[180];
 
 boolean rainBowRunning = true;
 
-void initRainbow(){
-  for (int i=0; i<180; i++) {
+void initRainbow()
+{
+  for (int i = 0; i < 180; i++)
+  {
     int hue = i * 2;
     int saturation = 100;
     int lightness = 50;
@@ -20,13 +22,15 @@ void initRainbow(){
   }
 }
 
-void runRainbow(){
+void runRainbow()
+{
   initRainbow();
   rainBowRunning = true;
-  while (rainBowRunning){
+  while (rainBowRunning)
+  {
     rainbow(10, 5000);
   }
-  
+
   fadeOut();
   displayLogo();
 }
@@ -40,14 +44,18 @@ void runRainbow(){
 // the entire 360 degrees of the color wheel:
 // Red -> Orange -> Yellow -> Green -> Blue -> Violet -> Red
 //
-void rainbow(int phaseShift, int cycleTime){
+void rainbow(int phaseShift, int cycleTime)
+{
   int color, x, y, offset, wait;
 
   wait = cycleTime * 1000 / NUM_PIXELS;
-  for (color=0; color < 180; color++) {
-    for (x=0; x < FIELD_WIDTH; x++) {
-      for (y=0; y < FIELD_HEIGHT; y++) {
-        int index = (color + x + y*phaseShift/2) % 180;
+  for (color = 0; color < 180; color++)
+  {
+    for (x = 0; x < FIELD_WIDTH; x++)
+    {
+      for (y = 0; y < FIELD_HEIGHT; y++)
+      {
+        int index = (color + x + y * phaseShift / 2) % 180;
         setTablePixel(x, y, rainbowColors[index]);
       }
     }
@@ -56,7 +64,8 @@ void rainbow(int phaseShift, int cycleTime){
     //Read buttons
 
     readInput();
-    if (curControl == BTN_START){
+    if (curControl == BTN_START)
+    {
       Serial.println("START");
       rainBowRunning = false;
       break;
@@ -65,23 +74,31 @@ void rainbow(int phaseShift, int cycleTime){
   }
 }
 
-int makeColor(unsigned int hue, unsigned int saturation, unsigned int lightness){
+int makeColor(unsigned int hue, unsigned int saturation, unsigned int lightness)
+{
   unsigned int red, green, blue;
   unsigned int var1, var2;
 
-  if (hue > 359) hue = hue % 360;
-  if (saturation > 100) saturation = 100;
-  if (lightness > 100) lightness = 100;
+  if (hue > 359)
+    hue = hue % 360;
+  if (saturation > 100)
+    saturation = 100;
+  if (lightness > 100)
+    lightness = 100;
 
   // algorithm from: http://www.easyrgb.com/index.php?X=MATH&H=19#text19
-  if (saturation == 0) {
+  if (saturation == 0)
+  {
     red = green = blue = lightness * 255 / 100;
-  } 
-  else {
-    if (lightness < 50) {
+  }
+  else
+  {
+    if (lightness < 50)
+    {
       var2 = lightness * (100 + saturation);
-    } 
-    else {
+    }
+    else
+    {
       var2 = ((lightness + saturation) * 100) - (saturation * lightness);
     }
     var1 = lightness * 200 - var2;
@@ -92,9 +109,13 @@ int makeColor(unsigned int hue, unsigned int saturation, unsigned int lightness)
   return (red << 16) | (green << 8) | blue;
 }
 
-unsigned int h2rgb(unsigned int v1, unsigned int v2, unsigned int hue){
-  if (hue < 60) return v1 * 60 + (v2 - v1) * hue;
-  if (hue < 180) return v2 * 60;
-  if (hue < 240) return v1 * 60 + (v2 - v1) * (240 - hue);
+unsigned int h2rgb(unsigned int v1, unsigned int v2, unsigned int hue)
+{
+  if (hue < 60)
+    return v1 * 60 + (v2 - v1) * hue;
+  if (hue < 180)
+    return v2 * 60;
+  if (hue < 240)
+    return v1 * 60 + (v2 - v1) * (240 - hue);
   return v1 * 60;
 }
