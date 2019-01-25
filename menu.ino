@@ -8,7 +8,7 @@
 #define MINSELECTION 1
 #define MAXSELECTION 12
 
-//PMR
+//PMR update
 unsigned int curSelection = MINSELECTION;
 //unsigned int curSelection = 2;
 
