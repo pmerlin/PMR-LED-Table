@@ -7,14 +7,13 @@
  */
 
 #define SPEED 500
-#define BUTTIME 500
 
 #define MAXSNAKEPLAYER 4
-uint8_t length[MAXSNAKEPLAYER]; //Curren length of snake
-int8_t xs[MAXSNAKEPLAYER][127]; //Array containing all snake segments,
-int8_t ys[MAXSNAKEPLAYER][127]; // max snake length is array length
-int8_t dir[MAXSNAKEPLAYER];     //Current Direction of snake
-int8_t isDead[MAXSNAKEPLAYER];   //Is snake alive
+uint8_t length[MAXSNAKEPLAYER];  //Current length of snake + score (-3)
+uint8_t xs[MAXSNAKEPLAYER][127]; //Array containing all snake segments,
+uint8_t ys[MAXSNAKEPLAYER][127]; // max snake length is array length
+uint8_t dir[MAXSNAKEPLAYER];      //Current Direction of snake
+uint8_t isDead[MAXSNAKEPLAYER];   //Is snake alive
 //uint8_t score[MAXSNAKEPLAYER];
 #define SNAKEWIDTH  1 //Snake width
 
@@ -79,6 +78,7 @@ void snakeInit(){
   snakeGameOver = false;
 }
 
+//TODO Check if 3 dead snake around apple.
 void newApple()
 {
   uint8_t i,j,collision; 
@@ -170,6 +170,7 @@ void runSnake(){
     for (j=0; j<nbPlayer; j++)
     {
       if ( isDead[j] ) continue;
+      
 //      if (collide(xs[j][0], ax, ys[j][0], ay, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH))
       if (checkCollision(xs[j][0], ax, ys[j][0], ay))
       {
@@ -270,7 +271,7 @@ void runSnake(){
         {
         case 1:
         {
-          if (  (now-dirChanged)>BUTTIME &&  (curControl>BTN_START)  )  //Can only change direction once per loop
+          if (  (now-dirChanged)>SPEED &&  (curControl>BTN_START)  )  //Can only change direction once per loop
           {
             Serial.print("\nP1");
             dirChanged=now; 
@@ -281,14 +282,14 @@ void runSnake(){
         
         case 2:
         {
-          if ( (now-dirChanged )>BUTTIME && ( (curControl&BTN_LEFT) || (curControl&BTN_RIGHT) ) ) //Can only change direction once per loop
+          if ( (now-dirChanged )>SPEED && ( (curControl&BTN_LEFT) || (curControl&BTN_RIGHT) ) ) //Can only change direction once per loop
           {
 //            Serial.print("P1");
             dirChanged=now; 
             setDirectionJ1_2();
           }
         
-          if ( (now-dirChanged2)>BUTTIME  && ( (curControl&BTN_LEFT2) || (curControl&BTN_RIGHT2) ) ) //Can only change direction once per loop
+          if ( (now-dirChanged2)>SPEED  && ( (curControl&BTN_LEFT2) || (curControl&BTN_RIGHT2) ) ) //Can only change direction once per loop
           {
 //            Serial.print("P2");
             dirChanged2=now;
@@ -302,28 +303,28 @@ void runSnake(){
         case 4:
         { 
           Serial.print(curControl);
-          if ( (now-dirChanged )>BUTTIME && ( (curControl&BTN_LEFT) || (curControl&BTN_UP) ) ) //Can only change direction once per loop
+          if ( (now-dirChanged )>SPEED && ( (curControl&BTN_LEFT) || (curControl&BTN_UP) ) ) //Can only change direction once per loop
           {
 //            Serial.print("P1");
             dirChanged=now; 
             setDirectionJ1();
           }
         
-          if ( (now-dirChanged2)>BUTTIME  && ( (curControl&BTN_LEFT2) || (curControl&BTN_UP2) ) ) //Can only change direction once per loop
+          if ( (now-dirChanged2)>SPEED  && ( (curControl&BTN_LEFT2) || (curControl&BTN_UP2) ) ) //Can only change direction once per loop
           {
 //            Serial.print("P2");
             dirChanged2=now;
             setDirectionJ2();
           }
 
-          if ( (nbPlayer >2) && (now-dirChanged3 )>BUTTIME &&( (curControl&BTN_DOWN) || (curControl&BTN_RIGHT) ) )
+          if ( (nbPlayer >2) && (now-dirChanged3 )>SPEED &&( (curControl&BTN_DOWN) || (curControl&BTN_RIGHT) ) )
           {
 //            Serial.print("P3");
             dirChanged3=now;
             setDirectionJ3();
           }
 
-          if ( (nbPlayer >3) && (now-dirChanged4 )>BUTTIME && ( (curControl&BTN_DOWN2) || (curControl&BTN_RIGHT2) ) )
+          if ( (nbPlayer >3) && (now-dirChanged4 )>SPEED && ( (curControl&BTN_DOWN2) || (curControl&BTN_RIGHT2) ) )
           {
 //            Serial.print("P4");
             dirChanged4=now;
