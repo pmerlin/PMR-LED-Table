@@ -10,12 +10,12 @@
 #define BUTTIME 500
 
 #define MAXSNAKEPLAYER 4
-uint8_t curLength[MAXSNAKEPLAYER]; //Curren length of snake
+uint8_t length[MAXSNAKEPLAYER]; //Curren length of snake
 int8_t xs[MAXSNAKEPLAYER][127]; //Array containing all snake segments,
 int8_t ys[MAXSNAKEPLAYER][127]; // max snake length is array length
 int8_t dir[MAXSNAKEPLAYER];     //Current Direction of snake
 int8_t isDead[MAXSNAKEPLAYER];   //Is snake alive
-uint8_t score[MAXSNAKEPLAYER];
+//uint8_t score[MAXSNAKEPLAYER];
 #define SNAKEWIDTH  1 //Snake width
 
 
@@ -35,8 +35,8 @@ void snakeInit(){
   
   for (i=0; i<nbPlayer; i++)
   {
-    curLength[i] = 3;
-    score[i] = 0;
+    length[i] = 3;
+//    score[i] = 0;
     isDead[i] =0;
   }
   
@@ -88,7 +88,7 @@ void newApple()
     ax = random(FIELD_WIDTH-1);
     ay = random(FIELD_HEIGHT-1);
     for (j=0; j<nbPlayer; j++)
-      for(i=0; i<curLength[j]; i++)
+      for(i=0; i<length[j]; i++)
         if (checkCollision(ax, xs[j][i], ay, ys[j][i])) 
         {
           collision++;
@@ -121,8 +121,8 @@ void runSnake(){
   
   snakeInit();
   
-  while(snakeRunning){    
- 
+  while(snakeRunning)
+  {    
     //Check collision with snake
     for (j=0; j<nbPlayer; j++)
     {
@@ -131,8 +131,9 @@ void runSnake(){
       {
         if (i!=j) //not same snake
         {
-          for(len=0; len < curLength[i]; len++)
+          for(len=0; len < length[i]; len++)
           {
+//        if (collide(xs[j][0], xs[j][len], ys[j][0], ys[j][len], SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH))     
             if (checkCollision(xs[j][0], xs[i][len], ys[j][0], ys[i][len]))
             {
               Serial.println("\ncollision with other\n");
@@ -144,7 +145,7 @@ void runSnake(){
         }
         else // same snake i==j
         {
-          len=curLength[j]-1;
+          len=length[j]-1;
           while (len>3) // need to be at least 4 for a self-collision
           {
             if (checkCollision(xs[j][0], xs[j][len], ys[j][0], ys[j][len]))
@@ -157,20 +158,7 @@ void runSnake(){
             len--;            
           }
         }
-      }
-/*      
-      len=curLength[j]-1;
-      while (len>=2){
-//        if (collide(xs[j][0], xs[j][len], ys[j][0], ys[j][len], SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH, SNAKEWIDTH))
-        if (checkCollision(xs[j][0], xs[j][len], ys[j][0], ys[j][len]))
-        {
-          Serial.println("collision");
-          isDead[j]++;
-          die();
-        }
-        len--;
-      }
- */     
+      }     
     }
 
     if (snakeGameOver){
@@ -187,12 +175,12 @@ void runSnake(){
       {
 
         //Add snake segment with temporary position of new segments
- //       xs[j][curLength[j]] = xs[j][curLength[j]-1]; //TODO usefull ?
- //       ys[j][curLength[j]] = ys[j][curLength[j]-1]; //
+ //       xs[j][length[j]] = xs[j][length[j]-1]; //TODO usefull ?
+ //       ys[j][length[j]] = ys[j][length[j]-1]; //
  
         //Increase score and snake length;
-        score[j]++;
-        curLength[j]++;
+//        score[j]++;
+        length[j]++;
               
         //Generate new apple position
         newApple();
@@ -204,7 +192,7 @@ void runSnake(){
     for (j=0; j<nbPlayer; j++)
     {
       if ( isDead[j] ) continue;
-      i = curLength[j]-1;
+      i = length[j]-1;
       while (i>=1){
         xs[j][i] = xs[j][i-1];
         ys[j][i] = ys[j][i-1];
@@ -250,7 +238,7 @@ void runSnake(){
     //Draw snakes
     for (j=0; j<nbPlayer; j++)
     {    
-      for (i=0; i<curLength[j]; i++)
+      for (i=0; i<length[j]; i++)
       {
         if ( isDead[j] ) setTablePixel(xs[j][i], ys[j][i], RED);
         else 
@@ -351,10 +339,15 @@ void runSnake(){
   
   fadeOut();
 
-  printNumber (score[0], 0, 0, snakecol[0]);
-  if (nbPlayer > 1) printNumber (score[1], 8, 0, snakecol[1]);
-  if (nbPlayer > 2) printNumber (score[1], 0, 5, snakecol[2]);
-  if (nbPlayer > 3) printNumber (score[1], 8, 5, snakecol[3]);
+  //add offset for 1 or 2 player to center scores
+  if(nbPlayer==1) {i=4; j=2;}
+  else if(nbPlayer==2) {i=0; j=2;}
+  else {i=j=0;}
+  
+  printNumber (length[0]-3, i, j, snakecol[0]);
+  if (nbPlayer > 1) printNumber (length[1]-3, 8, j, snakecol[1]);
+  if (nbPlayer > 2) printNumber (length[2]-3, 0, 5, snakecol[2]);
+  if (nbPlayer > 3) printNumber (length[3]-3, 8, 5, snakecol[3]);
   
   showPixels();
   delay (4000);

@@ -1,6 +1,7 @@
 /* LedTable
  *
  * Written by: Ing. David Hrbaty
+ * Update PAtrick MERLIN
  * 
  * 
  * Main code for Pong game
@@ -33,6 +34,7 @@ unsigned long waitUntil;
 
 unsigned long curTime;
 unsigned long prevUpdateTime = 0;
+
 void pongInit(){
   scorePlayerLeft  = 0;
   scorePlayerRight = 0;
@@ -78,6 +80,7 @@ void runPong(){
 
     // Draw ball
     setTablePixel(ballx,bally,WHITE);
+    
     // Draw player left
     for (int y=positionPlayerLeft-PLAYER_HEIGHT/2; y<=positionPlayerLeft+PLAYER_HEIGHT/2; ++y){
       setTablePixel(0, y, BLUE);
