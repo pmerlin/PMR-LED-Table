@@ -165,6 +165,10 @@ void runColorPalette(){
   displayLogo();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void runRainbowPalette(){
   static uint8_t startIndex = 0;
   unsigned long click = 0;
@@ -207,6 +211,75 @@ void runRainbowPalette(){
 
 //    while ((curTime - prevUpdateTime) <20);//Once enough time  has passed, proceed. The lower this number, the faster the game is
 //    prevUpdateTime = curTime;
+  }
+  displayLogo();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void initCylon(){
+  appRunning = true;
+}
+
+void fadeall() { for(int i = 0; i < NUM_PIXELS; i++) { leds[i].nscale8(250); } }
+
+
+void runCylon(){
+  initCylon();
+  clearTablePixels();
+  showPixels();
+  
+  unsigned long curTime, click;
+  
+  while(appRunning){
+ 
+
+//// some stuff
+  static uint8_t hue = 0;
+  Serial.print("x");
+  // First slide the led in one direction
+  for(int i = 0; i < NUM_PIXELS; i++) {
+    // Set the i'th led to red 
+    leds[i] = CHSV(hue++, 255, 255);
+    // Show the leds
+    showPixels();
+    // now that we've shown the leds, reset the i'th led to black
+    // leds[i] = CRGB::Black;
+    fadeall();
+    // Wait a little bit before we loop around and do it again
+    delay(10);
+  }
+  Serial.print("x");
+
+  // Now go in the other direction.  
+  for(int i = (NUM_PIXELS)-1; i >= 0; i--) {
+    // Set the i'th led to red 
+    leds[i] = CHSV(hue++, 255, 255);
+    // Show the leds
+    showPixels();
+    // now that we've shown the leds, reset the i'th led to black
+    // leds[i] = CRGB::Black;
+    fadeall();
+    // Wait a little bit before we loop around and do it again
+    delay(10);
+  }
+}
+
+
+    
+    
+    //Check input keys
+    curTime=millis();
+    do{
+      readInput();
+      if (curControl == BTN_EXIT){
+        appRunning = false;
+        break;
+      }
+    }
+    while ((millis()- curTime) <80); ;//Once enough time  has passed, proceed. The lower this number, the faster the game is
   }
   displayLogo();
 }

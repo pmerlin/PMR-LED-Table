@@ -6,7 +6,7 @@
  */
 
 #define MINSELECTION  1
-#define MAXSELECTION  12
+#define MAXSELECTION  13
 
 //PMR
 unsigned int curSelection = MINSELECTION;
@@ -20,7 +20,7 @@ void mainLoop(void){
   unsigned long prevUpdateTime = 0;
   int8_t oldNbPlayer;
 
-  char* SelectionText[]= { "0 Menu,", "1 Rainbow", "2 Animation", "3 Stars", "4 Vu Meter", "5 DaftPunk", "6 Tetris", "7 Snake", "8 Pong", "9 Bricks", "10 Test", "11 GameOfLife", "12 Nb Player" };
+  char* SelectionText[]= { "0 Menu,", "1 Rainbow", "2 Animation", "3 Stars", "4 Vu Meter", "5 DaftPunk", "6 Tetris", "7 Snake", "8 Pong", "9 Bricks", "10 Test", "11 GameOfLife", "12 Nb Player", "13 JinX" };
 
 //runNbPlayer();
 //runTest();
@@ -173,6 +173,9 @@ runSnake();
           break;       
         case 12:
           runNbPlayer();
+          break;                           
+        case 13:
+          runJinx();
           break;                           
       }
     } else {
