@@ -254,7 +254,8 @@ void runCylon(){
   Serial.print("x");
 
   // Now go in the other direction.  
-  for(int i = (NUM_PIXELS)-1; i >= 0; i--) {
+  for(int i = (NUM_PIXELS)-1; i >= 0; i--) 
+  {
     // Set the i'th led to red 
     leds[i] = CHSV(hue++, 255, 255);
     // Show the leds
@@ -265,10 +266,6 @@ void runCylon(){
     // Wait a little bit before we loop around and do it again
     delay(10);
   }
-}
-
-
-    
     
     //Check input keys
     curTime=millis();
@@ -279,7 +276,7 @@ void runCylon(){
         break;
       }
     }
-    while ((millis()- curTime) <80); ;//Once enough time  has passed, proceed. The lower this number, the faster the game is
+    while ((millis()- curTime) <80); //Once enough time  has passed, proceed. The lower this number, the faster the game is
   }
   displayLogo();
 }

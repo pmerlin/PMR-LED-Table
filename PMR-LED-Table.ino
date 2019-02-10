@@ -15,7 +15,7 @@
 //#define FAST_LED_CHIPSET WS2811
 #define FAST_LED_CHIPSET NEOPIXEL
 
-
+void mainLoop(void);
 
 //LED field size
 //Hori
