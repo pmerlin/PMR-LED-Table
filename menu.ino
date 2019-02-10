@@ -20,11 +20,13 @@ void mainLoop(void){
   unsigned long prevUpdateTime = 0;
   int8_t oldNbPlayer;
 
-  char* SelectionText[]= { "0 Menu,", "1 Rainbow", "2 Animation", "3 Stars", "4 Vu Meter", "5 DaftPunk", "6 Tetris", "7 Snake", "8 Pong", "9 Bricks", "10 Test", "11 GameOfLife", "12 Nb Player", "13 JinX" };
+  char* SelectionText[]= { "0 Menu,", "1 Rainbow", "2 Animation", "3 Stars", "4 Vu Meter", "5 DaftPunk", "6 Tetris", "7 Snake", 
+  "8 Pong", "9 Bricks", "10 Test", "11 GameOfLife", "12 Nb Player", "13 JinX", "14 Cylon", "15 Plasma" };
 
 //runNbPlayer();
 //runTest();
-runSnake();
+runPlasma();
+//runSnake();
 //runDP();
 //runColorPalette();
 
@@ -176,6 +178,12 @@ runSnake();
           break;                           
         case 13:
           runJinx();
+          break;                           
+        case 14:
+          runCylon();
+          break;                           
+        case 15:
+          runPlasma();
           break;                           
       }
     } else {

@@ -264,8 +264,93 @@ void runCylon(){
     // leds[i] = CRGB::Black;
     fadeall();
     // Wait a little bit before we loop around and do it again
-    delay(10);
+
+//    delay(10);
+    //Check input keys
+    curTime=millis();
+    do{
+      readInput();
+      if (curControl == BTN_EXIT){
+        appRunning = false;
+        break;
+      }
+    }
+    while ((millis()- curTime) <10); //Once enough time  has passed, proceed. The lower this number, the faster the game is
+   }  
   }
+  displayLogo();
+}
+
+/////////////////////////////////////////////////////////////////
+
+void initPlasma(){
+  appRunning = true;
+}
+/*
+// normal
+#if 0
+uint16_t XY(uint8_t x, uint8_t y) {
+  return y * LONG_SIDE + x;
+}
+#else
+// alternate (zigzag)
+uint16_t XY(uint8_t x, uint8_t y) {
+  uint16_t i;
+  if( y & 0x01) {
+      // Odd rows run backwards
+      uint8_t reverseX = (LONG_SIDE - 1) - x;
+      i = (y * LONG_SIDE) + reverseX;
+    } else {
+      // Even rows run forwards
+      i = (y * (LONG_SIDE)) + x;
+    }
+    return i;
+}
+#endif
+*/
+
+void runPlasma(){
+  initPlasma();
+  clearTablePixels();
+  showPixels();
+  
+  unsigned long curTime, click;
+  uint16_t PlasmaTime=0, PlasmaShift;
+  PlasmaShift = (random8(0, 5) * 32) + 64;
+/*
+  while(appRunning){
+   
+
+  if (abs(millis() - LastLoop) >= LoopDelayMS)
+  {
+    LastLoop = millis();
+    FastLED.clear();
+    */
+/*
+    // Fill background with dim plasma
+    #define PLASMA_X_FACTOR  24
+    #define PLASMA_Y_FACTOR  24
+
+    for (int16_t x=0; x<LONG_SIDE; x++)
+    {
+      for (int16_t y=0; y<SHORT_SIDE; y++)
+      {
+        int16_t r = sin16(PlasmaTime) / 256;
+        int16_t h = sin16(x * r * PLASMA_X_FACTOR + PlasmaTime) + cos16(y * (-r) * PLASMA_Y_FACTOR + PlasmaTime) + sin16(y * x * (cos16(-PlasmaTime) / 256) / 2);
+//        leds[XY(x, y)] = CHSV((uint8_t)((h / 256) + 128), 255, 64);
+        leds[XY(x, y)] = CHSV((uint8_t)((h / 256) + 128), 255, 200);
+
+      }
+    }
+    uint16_t OldPlasmaTime = PlasmaTime;
+    PlasmaTime += PlasmaShift;
+    if (OldPlasmaTime > PlasmaTime)
+      PlasmaShift = (random8(0, 5) * 32) + 64;
+    FastLED.show();
+
+//// some stuff
+    
+    showPixels();
     
     //Check input keys
     curTime=millis();
@@ -276,7 +361,8 @@ void runCylon(){
         break;
       }
     }
-    while ((millis()- curTime) <80); //Once enough time  has passed, proceed. The lower this number, the faster the game is
+    while ((millis()- curTime) <20); ;//Once enough time  has passed, proceed. The lower this number, the faster the game is
   }
+  */
   displayLogo();
 }
